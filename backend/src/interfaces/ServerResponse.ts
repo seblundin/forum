@@ -1,6 +1,6 @@
 import {Animal} from './Animal';
 import {Species} from './Species';
-import Category from './Category';
+import {Category} from './Category';
 
 export default interface ServerResponse extends Record<string, unknown> {
   data: {
