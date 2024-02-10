@@ -1,0 +1,7 @@
+#TODO User type
+#TODO TokenMessage type
+#TODO Credentials input
+#TODO UserInput input
+#TODO Query type to get all users, get user by id, and check token
+#TODO Mutation type to login, register, update user, and delete user
+
