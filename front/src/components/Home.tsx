@@ -5,12 +5,20 @@ const Home = () => {
     id: 12312313,
     title: 'Testilanka',
     content: 'moi',
+    replies: [
+      { id: 1, message: 'Reply 1' },
+      { id: 2, message: 'Reply 2' },
+    ],
   }
 
   const thread2: Thread = {
     id: 12312314,
     title: 'Another Testilanka',
     content: 'hello',
+    replies: [
+      { id: 3, message: 'Reply 3' },
+      { id: 4, message: 'Reply 4' },
+    ],
   }
 
   const threadList: Thread[] = [thread, thread2]
@@ -43,6 +51,17 @@ const Home = () => {
               </p>
               <div className="text-black">
                 <p>{thread.content}</p>
+              </div>
+              <div className="mt-4 space-y-2">
+                {thread.replies &&
+                  thread.replies.map((reply) => (
+                    <div
+                      key={reply.id}
+                      className="bg-gray-100 p-4 rounded-lg shadow-md"
+                    >
+                      <p className="text-black">{reply.message}</p>
+                    </div>
+                  ))}
               </div>
             </div>
           ))}
