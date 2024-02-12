@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Thread } from '../types/Types'
 import Reply from './Reply'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   const [threadList, setThreadList] = useState<Thread[]>([
@@ -55,7 +56,16 @@ const Home = () => {
 
   return (
     <>
-      <h1 className="text-5xl font-sans mb-4 text-center p-4">Foorumi</h1>
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-5xl font-sans mb-4 text-center p-4">Foorumi</h1>
+        <Link to="/login">
+          {' '}
+          {/* Use Link to navigate to /login route */}
+          <button className="bg-purple-500 text-white px-4 py-2 rounded">
+            Login
+          </button>
+        </Link>
+      </div>
       <main className="mt-16 bg-pink-100 text-white p-8 rounded-lg max-w-5xl mx-auto">
         <div>
           <button
