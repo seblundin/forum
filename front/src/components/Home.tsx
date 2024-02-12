@@ -1,36 +1,31 @@
+// Home.jsx
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Thread } from '../types/Types'
 import Reply from './Reply'
-import { Link } from 'react-router-dom'
+import CreateThread from './CreateThread'
 
 const Home = () => {
-  const [threadList, setThreadList] = useState<Thread[]>([
-    {
-      id: 12312313,
-      title: 'Testilanka',
-      content: 'moi',
-      replies: [
-        { id: 1, message: 'Reply 1' },
-        { id: 2, message: 'Reply 2' },
-      ],
-    },
-    {
-      id: 12312314,
-      title: 'Another Testilanka',
-      content: 'hello',
-      replies: [
-        { id: 3, message: 'Reply 3' },
-        { id: 4, message: 'Reply 4' },
-      ],
-    },
-  ])
-
+  const [threadList, setThreadList] = useState<Thread[]>([])
   const [showReplyBoxForThread, setShowReplyBoxForThread] = useState<
     number | null
   >(null)
+  const [showCreateThreadBox, setShowCreateThreadBox] = useState<boolean>(false)
 
   const handleCreateThread = () => {
-    console.log('Create thread button clicked')
+    setShowCreateThreadBox(true)
+  }
+
+  const handleCreateThreadSubmit = (title: string, content: string) => {
+    const newThread = {
+      id: Date.now(),
+      title: title,
+      content: content,
+      replies: [],
+    }
+
+    setThreadList((prevThreads) => [...prevThreads, newThread])
+    setShowCreateThreadBox(false)
   }
 
   const handleButtonClick = (threadId: number) => {
@@ -59,8 +54,6 @@ const Home = () => {
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-5xl font-sans mb-4 text-center p-4">Foorumi</h1>
         <Link to="/login">
-          {' '}
-          {/* Use Link to navigate to /login route */}
           <button className="bg-purple-500 text-white px-4 py-2 rounded">
             Login
           </button>
@@ -74,6 +67,9 @@ const Home = () => {
           >
             Create Thread
           </button>
+          {showCreateThreadBox && (
+            <CreateThread onSubmit={handleCreateThreadSubmit} />
+          )}
         </div>
         <div className="space-y-4">
           {threadList.map((thread) => (
