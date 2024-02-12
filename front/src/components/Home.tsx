@@ -1,6 +1,5 @@
+import React, { useState } from 'react'
 import { Thread } from '../types/Types'
-
-import { useState } from 'react'
 import Reply from './Reply'
 
 const Home = () => {
@@ -35,6 +34,23 @@ const Home = () => {
 
   const handleButtonClick = (threadId: number) => {
     setShowReplyBoxForThread(threadId)
+  }
+
+  const handleReplySubmit = (replyText: string, threadId: number) => {
+    const updatedThreadList = threadList.map((thread) =>
+      thread.id === threadId
+        ? {
+            ...thread,
+            replies: [
+              ...thread.replies,
+              { id: Date.now(), message: replyText },
+            ],
+          }
+        : thread
+    )
+
+    setThreadList(updatedThreadList)
+    setShowReplyBoxForThread(null)
   }
 
   return (
@@ -77,8 +93,13 @@ const Home = () => {
                 >
                   Reply
                 </button>
-                {/* Conditionally render Reply component */}
-                {showReplyBoxForThread === thread.id && <Reply />}
+                {showReplyBoxForThread === thread.id && (
+                  <Reply
+                    onSubmit={(replyText) =>
+                      handleReplySubmit(replyText, thread.id)
+                    }
+                  />
+                )}
               </div>
             </div>
           ))}
