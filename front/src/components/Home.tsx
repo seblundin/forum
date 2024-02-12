@@ -1,31 +1,40 @@
 import { Thread } from '../types/Types'
 
+import { useState } from 'react'
+import Reply from './Reply'
+
 const Home = () => {
-  const thread: Thread = {
-    id: 12312313,
-    title: 'Testilanka',
-    content: 'moi',
-    replies: [
-      { id: 1, message: 'Reply 1' },
-      { id: 2, message: 'Reply 2' },
-    ],
-  }
+  const [threadList, setThreadList] = useState<Thread[]>([
+    {
+      id: 12312313,
+      title: 'Testilanka',
+      content: 'moi',
+      replies: [
+        { id: 1, message: 'Reply 1' },
+        { id: 2, message: 'Reply 2' },
+      ],
+    },
+    {
+      id: 12312314,
+      title: 'Another Testilanka',
+      content: 'hello',
+      replies: [
+        { id: 3, message: 'Reply 3' },
+        { id: 4, message: 'Reply 4' },
+      ],
+    },
+  ])
 
-  const thread2: Thread = {
-    id: 12312314,
-    title: 'Another Testilanka',
-    content: 'hello',
-    replies: [
-      { id: 3, message: 'Reply 3' },
-      { id: 4, message: 'Reply 4' },
-    ],
-  }
-
-  const threadList: Thread[] = [thread, thread2]
+  const [showReplyBoxForThread, setShowReplyBoxForThread] = useState<
+    number | null
+  >(null)
 
   const handleCreateThread = () => {
-    // Implement the logic to create a new thread
     console.log('Create thread button clicked')
+  }
+
+  const handleButtonClick = (threadId: number) => {
+    setShowReplyBoxForThread(threadId)
   }
 
   return (
@@ -62,6 +71,14 @@ const Home = () => {
                       <p className="text-black">{reply.message}</p>
                     </div>
                   ))}
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded"
+                  onClick={() => handleButtonClick(thread.id)}
+                >
+                  Reply
+                </button>
+                {/* Conditionally render Reply component */}
+                {showReplyBoxForThread === thread.id && <Reply />}
               </div>
             </div>
           ))}
