@@ -1,4 +1,6 @@
-// Home.jsx
+/*
+Front page that shows list of threads
+*/
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Thread } from '../types/Types'
