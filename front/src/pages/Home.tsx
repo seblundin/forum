@@ -56,12 +56,14 @@ const Home = () => {
           )}
         </div>
         <div className="space-y-4">
-          {threads.map(
-            (thread) =>
-              !thread.parent && (
-                <ThreadComponent thread={thread}></ThreadComponent>
-              )
-          )}
+          {threads
+            .reverse()
+            .map(
+              (thread) =>
+                !thread.parent && (
+                  <ThreadComponent thread={thread}></ThreadComponent>
+                )
+            )}
         </div>
       </main>
     </>
