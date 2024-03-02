@@ -1,5 +1,4 @@
 import {NextFunction, Request, Response} from 'express';
-import imageFromWikipedia from './functions/imageFromWikipedia';
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomError from './classes/CustomError';
 import sharp from 'sharp';
@@ -32,21 +31,6 @@ const errorHandler = (
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
   });
-};
-
-const getWikiImage = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const {species_name} = req.body;
-    const image = await imageFromWikipedia(species_name);
-    req.body.image = image;
-    next();
-  } catch (error) {
-    next(error);
-  }
 };
 
 const getCoordinates = (req: Request, res: Response, next: NextFunction) => {
@@ -111,4 +95,4 @@ const makeThumbnail = async (
   }
 };
 
-export {notFound, errorHandler, getWikiImage, getCoordinates, makeThumbnail};
+export {notFound, errorHandler, getCoordinates, makeThumbnail};

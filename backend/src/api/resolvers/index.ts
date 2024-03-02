@@ -1,11 +1,4 @@
-import animalResolver from './animalResolver';
-import speciesResolver from './speciesResolver';
-import categoryResolver from './categoryResolver';
+import threadResolver from './threadResolver';
 import userResolver from './userResolver';
 
-export default [
-  animalResolver,
-  speciesResolver,
-  categoryResolver,
-  userResolver,
-];
+export default [threadResolver, userResolver];
