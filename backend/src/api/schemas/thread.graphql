@@ -1,0 +1,61 @@
+scalar DateTime
+
+type Thread {
+  id: ID!
+  title: String
+  content: String!
+  uploadtime: Date!
+  mediacontent: String
+  owner: User!
+  parent: Thread
+}
+
+type ThreadOutput {
+  id: ID!
+  title: String
+  content: String!
+  uploadtime: Date!
+  mediacontent: String
+  owner: User!
+}
+
+type ThreadInput {
+  title: String!
+  content: String!
+  uploadtime: Date!
+  mediacontent: String
+  owner: User!
+}
+
+type CommentOutput {
+  id: ID!
+  content: String!
+  uploadtime: Date!
+  mediacontent: String
+  owner: User!
+  parent: Thread!
+}
+
+type CommentInput {
+  content: String!
+  uploadtime: Date!
+  mediacontent: String!
+  owner: User!
+  parent: Thread!
+}
+
+type Query {
+  threads: [Thread]
+  threadById(id: ID!): Thread
+  threadByOwner(ownerId: ID!): Thread
+  commentsByThread(threadId: ID!): [Thread]
+}
+
+type Mutation {
+  addThread(thread: ThreadInput!): ThreadOutput
+  updateThread(id: ID!, thread: ThreadInput!): ThreadOutput
+  deleteThread(id: ID!): Thread
+  addComment(comment: CommentInput!): CommentOutput
+  updateComment(id: ID!, comment: CommentInput!): CommentOutput
+  deleteComment(id: ID!): Thread
+}
