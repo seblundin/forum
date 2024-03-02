@@ -1,9 +1,9 @@
 /*
 Reply box that can be opened with button click
 */
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-const Reply = ({ onSubmit }) => {
+const Reply = ({ onSubmit }: { onSubmit: (comment: string) => void }) => {
   const [replyText, setReplyText] = useState('')
 
   const handleTextareaChange = (event) => {

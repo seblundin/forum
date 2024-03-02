@@ -1,15 +1,18 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './components/Home'
-import Login from './components/Login'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import { ThreadProvider } from './context/ThreadContext'
 
 function App() {
   return (
     <div>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
+        <ThreadProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </ThreadProvider>
       </BrowserRouter>
     </div>
   )

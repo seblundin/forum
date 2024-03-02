@@ -1,20 +1,14 @@
 type Thread = {
-  id: number
-  title: string
+  id: string
+  title?: string
   user: User
   content: string
-  replies: Reply[]
-}
-
-type Reply = {
-  id: number
-  message: string
-  user: User
+  parent?: Thread
 }
 
 type User = {
-  id: number
+  id: string
   name: string
 }
 
-export type { Thread, Reply, User }
+export type { Thread, User }
