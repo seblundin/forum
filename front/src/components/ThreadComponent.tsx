@@ -11,7 +11,7 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
   const children = threads.filter((th) => th.parent?.id === thread.id)
 
   const handleButtonClick = () => {
-    setShowReplyBoxForReply(true)
+    setShowReplyBoxForReply((oldState) => !oldState)
   }
   return (
     <div className="bg-white p-6 rounded-lg shadow-md w-full" key={thread.id}>
