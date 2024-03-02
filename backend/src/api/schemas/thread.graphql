@@ -10,7 +10,7 @@ type Thread {
   parent: Thread
 }
 
-type TheadOutput {
+type ThreadOutput {
   id: ID!
   title: String
   content: String!
@@ -53,7 +53,7 @@ type Query {
 
 type Mutation {
   addThread(thread: ThreadInput!): ThreadOutput
-  updateThread(id: ID!, thread: ThreadInput!): TheadOutput
+  updateThread(id: ID!, thread: ThreadInput!): ThreadOutput
   deleteThread(id: ID!): Thread
   addComment(comment: CommentInput!): CommentOutput
   updateComment(id: ID!, comment: CommentInput!): CommentOutput
