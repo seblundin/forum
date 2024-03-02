@@ -58,12 +58,10 @@ const Home = () => {
         </div>
         <div className="space-y-4">
           {threads
-            .reverse()
+            .sort((a, b) => (b.uploadtime >= a.uploadtime ? 1 : -1))
             .map(
-              (thread) =>
-                !thread.parent && (
-                  <ThreadComponent thread={thread}></ThreadComponent>
-                )
+              (th) =>
+                !th.parent && <ThreadComponent thread={th}></ThreadComponent>
             )}
         </div>
       </main>
