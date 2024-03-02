@@ -44,6 +44,7 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
                 user: user,
                 content: replyText,
                 parent: thread,
+                uploadtime: new Date(),
               } as Thread
               addThread(newThread)
               handleButtonClick()

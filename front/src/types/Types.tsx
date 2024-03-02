@@ -4,6 +4,7 @@ type Thread = {
   user: User
   content: string
   parent?: Thread
+  uploadtime: Date
 }
 
 type User = {

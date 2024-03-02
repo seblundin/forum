@@ -27,6 +27,7 @@ const Home = () => {
       title: title,
       content: content,
       replies: [],
+      uploadtime: new Date(),
     }
 
     addThread(newThread)
