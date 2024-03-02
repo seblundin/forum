@@ -3,7 +3,7 @@ Front page that shows list of threads
 */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Thread } from '../types/Types'
+import { Thread, User } from '../types/Types'
 import Reply from './Reply'
 import CreateThread from './CreateThread'
 
@@ -19,8 +19,13 @@ const Home = () => {
   }
 
   const handleCreateThreadSubmit = (title: string, content: string) => {
+    const user = {
+      id: 123,
+      name: 'TestUser1',
+    }
     const newThread = {
       id: Date.now(),
+      user: user,
       title: title,
       content: content,
       replies: [],
@@ -35,13 +40,17 @@ const Home = () => {
   }
 
   const handleReplySubmit = (replyText: string, threadId: number) => {
+    const user = {
+      id: 123,
+      name: 'TestUser2',
+    }
     const updatedThreadList = threadList.map((thread) =>
       thread.id === threadId
         ? {
             ...thread,
             replies: [
               ...thread.replies,
-              { id: Date.now(), message: replyText },
+              { id: Date.now(), user: user, message: replyText },
             ],
           }
         : thread
@@ -82,6 +91,10 @@ const Home = () => {
               <p className="text-2xl font-sans mb-2 text-black">
                 {thread.title}
               </p>
+              <p className="text-l font-sans mb-2 text-black">
+                User:&nbsp;
+                {thread.user.name}
+              </p>
               <div className="text-black">
                 <p>{thread.content}</p>
               </div>
@@ -92,6 +105,10 @@ const Home = () => {
                       key={reply.id}
                       className="bg-gray-100 p-4 rounded-lg shadow-md"
                     >
+                      <p className="text-l font-sans mb-2 text-black">
+                        User:&nbsp;
+                        {thread.user.name}
+                      </p>
                       <p className="text-black">{reply.message}</p>
                     </div>
                   ))}
