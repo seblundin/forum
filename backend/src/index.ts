@@ -11,6 +11,6 @@ const port = process.env.PORT || 3000;
       /* eslint-enable no-console */
     });
   } catch (error) {
-    console.log('Server error', (error as Error).message);
+    console.log('Server error', error);
   }
 })();

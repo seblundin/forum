@@ -5,8 +5,11 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
+    "start:js": "node dist/src/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
+    "copyGraphql": "copyfiles --error src/api/schemas/*.graphql dist",
+    "postbuild": "npm run copyGraphql",
     "lint": "eslint --fix src test",
     "test": "jest --detectOpenHandles --forceExit --silent=false"
   },
@@ -19,10 +22,9 @@
   "license": "MIT",
   "dependencies": {
     "@apollo/server": "^4.4.1",
-    "@azure/identity": "^3.1.3",
-    "@azure/keyvault-secrets": "^4.6.0",
     "@graphql-tools/load-files": "^6.6.1",
     "@graphql-tools/merge": "^8.3.18",
+    "copyfiles": "^2.4.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "exif": "^0.6.0",
