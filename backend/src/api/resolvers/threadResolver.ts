@@ -11,7 +11,7 @@ export default {
         console.log(error);
       }
     },
-    threadsById: async (_parent: undefined, args: {id: string}) => {
+    threadById: async (_parent: undefined, args: {id: string}) => {
       try {
         const threads = await threadModel.find({id: args.id});
         return threads;
@@ -19,7 +19,7 @@ export default {
         console.log(error);
       }
     },
-    threadsByOwner: async (_parent: undefined, args: {ownerId: string}) => {
+    threadByOwner: async (_parent: undefined, args: {ownerId: string}) => {
       try {
         const threads = await threadModel.find({owner: args.ownerId});
         return threads;
@@ -36,7 +36,7 @@ export default {
       }
     },
   },
-  Mutations: {
+  Mutation: {
     addThread: async (
       _parent: undefined,
       args: {thread: ThreadInput},

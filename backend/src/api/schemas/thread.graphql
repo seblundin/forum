@@ -1,10 +1,8 @@
-scalar DateTime
-
 type Thread {
   id: ID!
   title: String
   content: String!
-  uploadtime: Date!
+  uploadtime: String!
   mediacontent: String
   owner: User!
   parent: Thread
@@ -14,34 +12,34 @@ type ThreadOutput {
   id: ID!
   title: String
   content: String!
-  uploadtime: Date!
+  uploadtime: String!
   mediacontent: String
   owner: User!
 }
 
-type ThreadInput {
+input ThreadInput {
   title: String!
   content: String!
-  uploadtime: Date!
+  uploadtime: String!
   mediacontent: String
-  owner: User!
+  owner: String!
 }
 
 type CommentOutput {
   id: ID!
   content: String!
-  uploadtime: Date!
+  uploadtime: String!
   mediacontent: String
   owner: User!
   parent: Thread!
 }
 
-type CommentInput {
+input CommentInput {
   content: String!
-  uploadtime: Date!
+  uploadtime: String!
   mediacontent: String!
-  owner: User!
-  parent: Thread!
+  owner: String!
+  parent: String!
 }
 
 type Query {
