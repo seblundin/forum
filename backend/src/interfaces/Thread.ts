@@ -44,4 +44,14 @@ interface CommentInput {
   parent: Thread;
 }
 
-export {Thread, TheadOutput, ThreadInput, CommentOutput, CommentInput};
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ThreadTest extends Partial<Thread> {}
+
+export {
+  Thread,
+  TheadOutput,
+  ThreadInput,
+  CommentOutput,
+  CommentInput,
+  ThreadTest,
+};

@@ -1,5 +1,5 @@
 import {Request} from 'express';
-import LoginMessageResponse from '../interfaces/LoginMessageResponse';
+import LoginMessageResponse from '../interfaces/LoginResponse';
 
 export default async (req: Request) => {
   // check that user is in auth server

@@ -2,7 +2,7 @@ import {GraphQLError} from 'graphql';
 import {TokenContent, User, UserInput, UserOutput} from '../../interfaces/User';
 import fetchData from '../../functions/fetchData';
 import UserResponse from '../../interfaces/UserResponse';
-import LoginResponse from '../../interfaces/LoginMessageResponse';
+import LoginResponse from '../../interfaces/LoginResponse';
 import {MyContext} from '../../interfaces/MyContext';
 import {Thread} from '../../interfaces/Thread';
 
