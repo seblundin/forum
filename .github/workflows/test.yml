@@ -1,0 +1,35 @@
+name: API Tests
+
+on:
+  push:
+    branches:
+      - user_updates
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: cd backend && npm install
+
+      - name: Set up test db
+        run: docker compose up mongodb
+
+      - name: Build auth server
+        run: cd auth_server && npm run build
+
+      - name: Run auth server
+        run: npm run start
+
+      - name: Run tests
+        run: cd .. && npm run test
