@@ -1,14 +1,11 @@
-/*
-Front page that shows a list of threads
-*/
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import CreateThread from '../components/CreateThread'
 import ThreadComponent from '../components/ThreadComponent'
 import { useThreadContext } from '../context/ThreadContext'
+import ButtonBase from '../components/ButtonBase'
 
 const Home = () => {
-  // const [showCreateThreadBox, setShowCreateThreadBox] = useState<boolean>(false)
   const { threads, addThread } = useThreadContext()
   const [showCreateThreadBox, setShowCreateThreadBox] = useState(false)
 
@@ -39,19 +36,14 @@ const Home = () => {
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-5xl font-sans mb-4 text-center p-4">Foorumi</h1>
         <Link to="/login">
-          <button className="bg-purple-500 text-white px-4 py-2 rounded">
-            Login
-          </button>
+          <ButtonBase color="purple">Login</ButtonBase>
         </Link>
       </div>
       <main className="mt-16 bg-pink-100 text-white p-8 rounded-lg max-w-5xl mx-auto">
         <div>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-            onClick={handleCreateThread}
-          >
+          <ButtonBase color="blue" onClick={handleCreateThread}>
             Create Thread
-          </button>
+          </ButtonBase>
           {showCreateThreadBox && (
             <CreateThread onSubmit={handleCreateThreadSubmit} />
           )}
@@ -61,7 +53,9 @@ const Home = () => {
             .sort((a, b) => (b.uploadtime >= a.uploadtime ? 1 : -1))
             .map(
               (th) =>
-                !th.parent && <ThreadComponent thread={th}></ThreadComponent>
+                !th.parent && (
+                  <ThreadComponent thread={th} key={th.id}></ThreadComponent>
+                )
             )}
         </div>
       </main>

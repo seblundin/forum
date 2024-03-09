@@ -1,4 +1,3 @@
-// File: ThreadContext.tsx
 import React, { createContext, useState, ReactNode, useContext } from 'react'
 import { Thread } from '../types/Types'
 
