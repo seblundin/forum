@@ -24,13 +24,17 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: cd backend && npm install
+        working-directory: ./backend
+        run: npm install
 
       - name: Build auth server
-        run: cd auth_server && npm run build
+        working-directory: ./backend/auth_server
+        run: npm install && npm run build
 
       - name: Run auth server
+        working-directory: ./backend/auth_server
         run: npm run start
 
       - name: Run tests
-        run: cd .. && npm run test
+        working-directory: ./backend
+        run: npm run test
