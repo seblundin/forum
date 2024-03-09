@@ -9,6 +9,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     environment: test
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JWT_SECRET: ${{ vars.JWT_SECRET }}
+      NODE_ENV: ${{ vars.NODE_ENV }}
 
     steps:
       - name: Checkout code
@@ -21,9 +25,6 @@ jobs:
 
       - name: Install dependencies
         run: cd backend && npm install
-
-      - name: Set up test db
-        run: docker compose up mongodb
 
       - name: Build auth server
         run: cd auth_server && npm run build
