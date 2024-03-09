@@ -8,7 +8,7 @@ interface Props {
 const ButtonBase = ({ color = 'green', props, onClick, children }: Props) => {
   return (
     <button
-      type="submit"
+      type="button"
       className={`bg-${color}-500 text-white px-4 py-2 rounded-md hover:bg-${color}-600`}
       onClick={onClick}
       {...props}
