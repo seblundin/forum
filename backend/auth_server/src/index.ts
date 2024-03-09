@@ -1,7 +1,7 @@
 import app from './app';
 import mongoConnect from './utils/db';
 
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 3001;
 (async () => {
   try {
     await mongoConnect();

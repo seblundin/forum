@@ -1,8 +1,8 @@
 import {GraphQLError} from 'graphql';
-import {TokenContent, User, UserInput, UserOutput} from '../../interfaces/User';
+import {User, UserInput} from '../../interfaces/User';
 import fetchData from '../../functions/fetchData';
 import UserResponse from '../../interfaces/UserResponse';
-import LoginResponse from '../../interfaces/LoginResponse';
+import {LoginResponse} from '../../interfaces/MessageInterfaces';
 import {MyContext} from '../../interfaces/MyContext';
 import {Thread} from '../../interfaces/Thread';
 
@@ -23,7 +23,7 @@ export default {
         `${process.env.AUTH_URL}/users/${args.id}`
       );
     },
-    checkToken: async (_parent: undefined, args: {}, context: MyContext) => {
+    checkToken: async (_parent: undefined, _: {}, context: MyContext) => {
       if (!context.userdata?.user) {
         throw new GraphQLError('Invalid token');
       }
@@ -39,7 +39,7 @@ export default {
         `${process.env.AUTH_URL}/auth/login`,
         {
           method: 'POST',
-          headers: {'Content-Type': 'application.json'},
+          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(args.credentials),
         }
       );
@@ -47,7 +47,7 @@ export default {
     register: async (_parent: undefined, args: {user: UserInput}) => {
       return await fetchData<UserResponse>(`${process.env.AUTH_URL}/users`, {
         method: 'POST',
-        headers: {'Content-Type': 'application.json'},
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(args.user),
       });
     },
@@ -59,13 +59,13 @@ export default {
       return await fetchData<UserResponse>(`${process.env.AUTH_URL}/users`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application.json',
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${context.userdata?.token}`,
         },
         body: JSON.stringify(args.user),
       });
     },
-    deleteUser: async (_parent: undefined, args: {}, context: MyContext) => {
+    deleteUser: async (_parent: undefined, _: {}, context: MyContext) => {
       return await fetchData<UserResponse>(
         `${process.env.AUTH_URL}/users/${context.userdata?.user.id}`,
         {

@@ -1,34 +1,20 @@
-import dotenv from 'dotenv';
-dotenv.config();
-import mongoose from 'mongoose';
 import app from '../src/app';
 import {
-  getUser,
-  getSingleUser,
-  postUser,
-  loginUser,
-  putUser,
+  // adminDeleteUser,
   deleteUser,
+  getSingleUser,
+  getUser,
+  loginUser,
+  postUser,
+  putUser,
 } from './userFunctions';
+import mongoose from 'mongoose';
 import {getNotFound} from './testFunctions';
-import {
-  getCat,
-  getCatByBoundingBox,
-  getCatByOwner,
-  getSingleCat,
-  postCat,
-  postFile,
-  userDeleteCat,
-  userPutCat,
-  wrongUserDeleteCat,
-  wrongUserPutCat,
-} from './catFunctions';
+
 import randomstring from 'randomstring';
 import jwt from 'jsonwebtoken';
-import LoginResponse from '../src/interfaces/LoginResponse';
-import {UserTest} from '../src/interfaces/User';
-import {ThreadTest} from '../src/interfaces/Thread';
-import {CommentInput, Thread, ThreadInput} from '../src/interfaces/Thread';
+import {LoginResponse} from '../src/interfaces/MessageInterfaces';
+import {UserInput} from '../src/interfaces/User';
 
 describe('Testing graphql api', () => {
   beforeAll(async () => {
