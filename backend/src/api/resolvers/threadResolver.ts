@@ -1,6 +1,9 @@
 import {MyContext} from '../../interfaces/MyContext';
 import {CommentInput, ThreadInput} from '../../interfaces/Thread';
 import threadModel from '../models/threadModel';
+import userModel from '../../../auth_server/src/api/models/userModel';
+import fetchData from '../../functions/fetchData';
+import {User} from '../../interfaces/User';
 
 export default {
   Query: {
@@ -43,10 +46,16 @@ export default {
       context: MyContext
     ) => {
       try {
-        return await threadModel.create({
-          ...args.thread,
-          owner: context.userdata?.user,
-        });
+        const thread = (
+          await threadModel.create({
+            ...args.thread,
+            owner: context.userdata?.user.id,
+          })
+        ).toObject();
+        const user = await fetchData<User[]>(
+          `${process.env.AUTH_URL}/users/${context.userdata?.user.id}`
+        );
+        return {...thread, owner: user, id: thread._id.toString()};
       } catch (error) {
         console.log(error);
       }

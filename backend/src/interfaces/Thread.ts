@@ -1,3 +1,4 @@
+import {Types} from 'mongoose';
 import {User} from './User';
 
 interface Thread {
@@ -6,8 +7,8 @@ interface Thread {
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: User;
-  parent?: Thread;
+  owner: Types.ObjectId | User;
+  parent?: Types.ObjectId | Thread;
 }
 
 interface TheadOutput {
@@ -16,7 +17,7 @@ interface TheadOutput {
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: User;
+  owner: Types.ObjectId | User;
 }
 
 interface ThreadInput {
@@ -24,7 +25,6 @@ interface ThreadInput {
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: User;
 }
 
 interface CommentOutput {
@@ -32,16 +32,15 @@ interface CommentOutput {
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: User;
-  parent: Thread;
+  owner: Types.ObjectId | User;
+  parent: Types.ObjectId | Thread;
 }
 
 interface CommentInput {
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: User;
-  parent: Thread;
+  parent: Types.ObjectId | Thread;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

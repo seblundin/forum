@@ -3,6 +3,7 @@ import request from 'supertest';
 import {UploadResponse} from '../src/types/MessageTypes';
 import {Application} from 'express';
 import {CatTest, LocationInput, UserTest} from '../src/types/DBTypes';
+import {ThreadTest} from '../src/interfaces/Thread';
 require('dotenv').config();
 
 // add test for graphql query
@@ -34,6 +35,8 @@ mutation CreateCat($cat_name: String!, $weight: Float!, $birthdate: DateTime!, $
 }
 */
 
+//TODO
+/*
 const postFile = (
   url: string | Application,
   token: string
@@ -60,35 +63,31 @@ const postFile = (
         }
       });
   });
-};
+}; */
 
-const postCat = (
+const postThread = (
   url: string | Application,
-  vars: {input: CatTest},
+  vars: {input: ThreadTest},
   token: string
-): Promise<CatTest> => {
+): Promise<ThreadTest> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
       .set('Content-type', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        query: `mutation CreateCat($input: CatInput!) {
-          createCat(input: $input) {
-            birthdate
-            cat_name
-            filename
-            weight
+        query: `mutation addThread($thread: ThreadInput!) {
+          addThread(thread: $thread) {
+            title
+            content
+            uploadtime
+            mediacontent
             owner {
               email
               user_name
               id
             }
-            id
-            location {
-              coordinates
-              type
-            }
+            parent
           }
         }`,
         variables: vars,
@@ -97,17 +96,16 @@ const postCat = (
         if (err) {
           reject(err);
         } else {
-          const cat = vars.input;
-          const newCat: CatTest = response.body.data.createCat;
-          expect(newCat).toHaveProperty('id');
-          expect(newCat.cat_name).toBe(cat.cat_name);
-          expect(newCat.weight).toBe(cat.weight);
-          expect(newCat).toHaveProperty('birthdate');
-          expect(newCat.owner).toHaveProperty('user_name');
-          expect(newCat.location).toHaveProperty('coordinates');
-          expect(newCat.location).toHaveProperty('type');
-          expect(newCat.filename).toBe(cat.filename);
-          resolve(newCat);
+          const thread = vars.input;
+          const newThread: ThreadTest = response.body.data.addThread;
+          expect(newThread).toHaveProperty('id');
+          expect(newThread.title).toBe(thread.title);
+          expect(newThread.content).toBe(thread.content);
+          expect(newThread).toHaveProperty('uploadtime');
+          expect(newThread).toHaveProperty('mediacontent');
+          expect(newThread.owner).toHaveProperty('user_name');
+          expect(newThread.parent).toHaveProperty('id');
+          resolve(newThread);
         }
       });
   });

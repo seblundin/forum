@@ -74,7 +74,7 @@ export const userPost = async (
 ) => {
   try {
     if (req.body.password.length < 5) {
-      next(new CustomError('Invalid password length', 400));
+      return next(new CustomError('Invalid password length', 400));
     }
     const password = await hash(req.body.password, 12);
 

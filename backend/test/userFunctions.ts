@@ -1,7 +1,7 @@
 /* eslint-disable node/no-unpublished-import */
 import request from 'supertest';
 import randomstring from 'randomstring';
-import {User, UserTest} from '../src/interfaces/User';
+import {UserTest} from '../src/interfaces/User';
 import {Application} from 'express';
 import LoginResponse from '../src/interfaces/LoginResponse';
 import UserResponse from '../src/interfaces/UserResponse';

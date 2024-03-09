@@ -15,6 +15,7 @@ import randomstring from 'randomstring';
 import jwt from 'jsonwebtoken';
 import {LoginResponse} from '../src/interfaces/MessageInterfaces';
 import {UserInput} from '../src/interfaces/User';
+import {ThreadTest} from '../src/interfaces/Thread';
 
 describe('Testing graphql api', () => {
   beforeAll(async () => {
@@ -104,7 +105,6 @@ describe('Testing graphql api', () => {
         content: 'Test Content' + randomstring.generate(7),
         uploadtime: new Date('2022-01-01'),
         mediacontent: 'TODO',
-        owner: userData.user,
       },
     };
     console.log(threadData1);
