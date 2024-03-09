@@ -26,11 +26,13 @@ export const userDelete = async (
   next: NextFunction
 ) => {
   try {
-    if (!req.query.id) {
+    if (!req.params.id) {
       next(new CustomError('Bad request, user id missing', 400));
     }
-    const result = await UserModel.findOneAndDelete({_id: req.query.id}).exec();
-    console.error(result);
+    const result = await UserModel.findOneAndDelete({
+      _id: req.params.id,
+    }).exec();
+
     result
       ? res.json({message: 'User deleted', user: result})
       : new CustomError('Not found', 404);
