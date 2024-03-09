@@ -33,7 +33,7 @@ jobs:
 
       - name: Run auth server
         working-directory: ./backend/auth_server
-        run: npm run start
+        run: npm run start &
 
       - name: Run tests
         working-directory: ./backend
