@@ -1,24 +1,22 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Register from '../components/Register'
+import InputBase from '../components/InputBase'
+import useInput from '../hooks/useInput'
+import ButtonBase from '../components/ButtonBase'
 
 const Login = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [showRegister, setShowRegister] = useState(false)
+  const username = useInput({
+    placeholder: 'Enter your username',
+  })
+  const password = useInput({
+    placeholder: 'Enter your password',
+  })
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
-  }
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
-
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log('Username:', username)
-    console.log('Password:', password)
+    console.log(password.value, username.value)
   }
 
   const handleRegisterClick = () => {
@@ -37,15 +35,7 @@ const Login = () => {
             >
               Username
             </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={username}
-              onChange={handleUsernameChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Enter your username"
-            />
+            <InputBase props={username} />
           </div>
           <div className="mb-4">
             <label
@@ -54,35 +44,21 @@ const Login = () => {
             >
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Enter your password"
-            />
+            <InputBase props={password} />
           </div>
 
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-          >
-            Login
-          </button>
+          <ButtonBase color="blue">Login</ButtonBase>
 
           <div className="mt-2">
             <p className="text-gray-600 text-sm font-semibold mb-2">
               New User?
             </p>
-            <button
-              type="button"
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+            <ButtonBase
               onClick={handleRegisterClick}
+              props={{ type: 'submit' }}
             >
               Register
-            </button>
+            </ButtonBase>
           </div>
         </form>
 

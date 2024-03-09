@@ -1,32 +1,35 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import useInput from '../hooks/useInput'
+import InputBase from './InputBase'
+import ButtonBase from './ButtonBase'
 
-const CreateThread = ({ onSubmit }) => {
-  const [threadTitle, setThreadTitle] = useState('')
+const CreateThread = ({
+  onSubmit,
+}: {
+  onSubmit: (title: string, content: string) => void
+}) => {
   const [threadContent, setThreadContent] = useState('')
 
-  const handleTitleChange = (event) => {
-    setThreadTitle(event.target.value)
-  }
+  const threadTitle = useInput({
+    placeholder: 'Thread Title',
+    className: 'w-full p-2 mb-2',
+  })
 
-  const handleContentChange = (event) => {
+  const handleContentChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setThreadContent(event.target.value)
   }
 
   const handleSubmit = () => {
-    onSubmit(threadTitle, threadContent)
-    setThreadTitle('')
+    onSubmit(threadTitle.value, threadContent)
+    threadTitle.onChange()
     setThreadContent('')
   }
 
   return (
     <div className="bg-gray-200 p-4 rounded-lg shadow-md text-black">
-      <input
-        type="text"
-        placeholder="Thread Title"
-        value={threadTitle}
-        onChange={handleTitleChange}
-        className="w-full p-2 mb-2"
-      />
+      <InputBase props={threadTitle} />
       <textarea
         placeholder="Thread Content..."
         rows={3}
@@ -34,12 +37,9 @@ const CreateThread = ({ onSubmit }) => {
         onChange={handleContentChange}
         className="w-full p-2 mb-2"
       />
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-        onClick={handleSubmit}
-      >
+      <ButtonBase color="blue" onClick={handleSubmit}>
         Create Thread
-      </button>
+      </ButtonBase>
     </div>
   )
 }
