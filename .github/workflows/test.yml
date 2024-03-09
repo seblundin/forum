@@ -13,6 +13,7 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       JWT_SECRET: ${{ vars.JWT_SECRET }}
       NODE_ENV: ${{ vars.NODE_ENV }}
+      AUTH_URL: ${{ vars.AUTH_URL }}
 
     steps:
       - name: Checkout code
