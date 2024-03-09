@@ -42,7 +42,9 @@ const app = express();
       '/graphql',
       express.json(),
       cors<cors.CorsRequest>(),
-      expressMiddleware(server)
+      expressMiddleware(server, {
+        context: async ({req}) => authenticate(req),
+      })
     );
 
     app.use(notFound);
