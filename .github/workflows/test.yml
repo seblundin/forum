@@ -1,9 +1,9 @@
 name: API Tests
 
 on:
-  push:
+  pull_request:
     branches:
-      - user_updates
+      - main
 
 jobs:
   test:
