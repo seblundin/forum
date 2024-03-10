@@ -2,6 +2,7 @@ import { useState } from 'react'
 import useInput from '../hooks/useInput'
 import InputBase from './InputBase'
 import ButtonBase from './ButtonBase'
+import ButtonColors from '../enums/ButtonColors'
 
 const CreateThread = ({
   onSubmit,
@@ -37,7 +38,7 @@ const CreateThread = ({
         onChange={handleContentChange}
         className="w-full p-2 mb-2"
       />
-      <ButtonBase color="blue" onClick={handleSubmit}>
+      <ButtonBase color={ButtonColors.blue} onClick={handleSubmit}>
         Create Thread
       </ButtonBase>
     </div>
