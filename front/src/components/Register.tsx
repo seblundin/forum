@@ -1,6 +1,8 @@
+import { useUser } from '../context/UserContext'
 import useInput from '../hooks/useInput'
 import ButtonBase from './ButtonBase'
 import InputBase from './InputBase'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
   const username = useInput({
@@ -17,14 +19,27 @@ const Register = () => {
     id: 'confirmPassword',
     placeholder: 'Confirm your password',
   })
+  const email = useInput({
+    id: 'email',
+    type: 'email',
+    placeholder: 'Enter your email',
+  })
+  const { register } = useUser()
+  const navigate = useNavigate()
 
-  const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     if (password.value !== confirmPassword.value) {
       console.error('Passwords do not match')
       return
     }
+    await register({
+      username: username.value,
+      password: password.value,
+      email: email.value,
+    })
+    navigate('/')
   }
 
   return (
@@ -39,6 +54,15 @@ const Register = () => {
             Username
           </label>
           <InputBase props={username} />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="email"
+            className="block text-gray-600 text-sm font-semibold mb-2"
+          >
+            Email
+          </label>
+          <InputBase props={email} />
         </div>
         <div className="mb-4">
           <label

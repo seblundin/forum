@@ -3,10 +3,12 @@ import { Thread } from '../types/Types'
 import Reply from './Reply'
 import { useThreadContext } from '../context/ThreadContext'
 import ButtonBase from './ButtonBase'
+import { useUser } from '../context/UserContext'
 
 const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
   const [showReplyBoxForReply, setShowReplyBoxForReply] =
     useState<boolean>(false)
+  const { userState } = useUser()
 
   const { threads, addThread } = useThreadContext()
   const children = threads.filter((th) => th.parent?.id === thread.id)
@@ -18,7 +20,7 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
     <div className="bg-white p-6 rounded-lg shadow-md w-full" key={thread.id}>
       <p className="text-2xl font-sans mb-2 text-black">{thread.title}</p>
       <p className="text-l font-sans mb-2 text-black">
-        User:&nbsp;{thread.user.name}
+        User:&nbsp;{thread.user}
       </p>
       <div className="text-black">
         <p>{thread.content}</p>
@@ -31,13 +33,9 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
         {showReplyBoxForReply && (
           <Reply
             onSubmit={(replyText: string) => {
-              const user = {
-                id: '123',
-                name: 'TestUser1',
-              }
               const newThread = {
                 id: Date.now().toString(),
-                user: user,
+                user: userState!.user.id,
                 content: replyText,
                 parent: thread,
                 uploadtime: new Date(),
