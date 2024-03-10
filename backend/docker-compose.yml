@@ -42,7 +42,7 @@ services:
       PORT: 3001
       NODE_ENV: development
       DATABASE_URL: mongodb://root:secret@mongodb:27017
-      JWR_SECRET: secret
+      JWT_SECRET: secret
 
   graphql:
     build: .

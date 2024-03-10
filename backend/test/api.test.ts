@@ -37,13 +37,13 @@ describe('Testing graphql api', () => {
   // let adminData: LoginResponse;
 
   const testUser: UserInput = {
-    user_name: 'Test User ' + randomstring.generate(7),
+    username: 'Test User ' + randomstring.generate(7),
     email: randomstring.generate(9) + '@user.fi',
     password: 'testpassword',
   };
 
   const testUser2: UserInput = {
-    user_name: 'Test User ' + randomstring.generate(7),
+    username: 'Test User ' + randomstring.generate(7),
     email: randomstring.generate(9) + '@user.fi',
     password: 'testpassword',
   };

@@ -32,7 +32,7 @@ const login = async (
 
     const outUserToken = {
       id: user._id,
-      user_name: user.user_name,
+      username: user.username,
       email: user.email,
       role: user.role,
     };

@@ -12,7 +12,7 @@ const getUser = (url: string | Application): Promise<UserInput[]> => {
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
-        query: '{users{id user_name email}}',
+        query: '{users{id username email}}',
       })
       .expect(200, (err, response) => {
         if (err) {
@@ -21,7 +21,7 @@ const getUser = (url: string | Application): Promise<UserInput[]> => {
           const users = response.body.data.users;
           expect(users).toBeInstanceOf(Array);
           expect(users[0]).toHaveProperty('id');
-          expect(users[0]).toHaveProperty('user_name');
+          expect(users[0]).toHaveProperty('username');
           expect(users[0]).toHaveProperty('email');
           resolve(response.body.data.users);
         }
@@ -32,7 +32,7 @@ const getUser = (url: string | Application): Promise<UserInput[]> => {
 /* test for graphql query
 query UserById($userByIdId: ID!) {
   userById(id: $userByIdId) {
-    user_name
+    username
     id
     email
   }
@@ -49,7 +49,7 @@ const getSingleUser = (
       .send({
         query: `query UserById($userByIdId: ID!) {
           userById(id: $userByIdId) {
-            user_name
+            username
             id
             email
           }
@@ -64,7 +64,7 @@ const getSingleUser = (
         } else {
           const user = response.body.data.userById;
           expect(user.id).toBe(id);
-          expect(user).toHaveProperty('user_name');
+          expect(user).toHaveProperty('username');
           expect(user).toHaveProperty('email');
           resolve(response.body.data.userById);
         }
@@ -78,7 +78,7 @@ mutation Mutation($user: UserInput!) {
     message
     user {
       id
-      user_name
+      username
       email
     }
   }
@@ -98,14 +98,14 @@ const postUser = (
             message
             user {
               id
-              user_name
+              username
               email
             }
           }
         }`,
         variables: {
           user: {
-            user_name: user.user_name,
+            username: user.username,
             email: user.email,
             password: user.password,
           },
@@ -119,7 +119,7 @@ const postUser = (
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
           expect(userData.user).toHaveProperty('id');
-          expect(userData.user.user_name).toBe(user.user_name);
+          expect(userData.user.username).toBe(user.username);
           expect(userData.user.email).toBe(user.email);
           resolve(response.body.data.register);
         }
@@ -135,7 +135,7 @@ mutation Login($credentials: Credentials!) {
     user {
       email
       id
-      user_name
+      username
     }
   }
 }
@@ -156,7 +156,7 @@ const loginUser = (
             message
             user {
               email
-              user_name
+              username
               id
             }
           }
@@ -196,7 +196,7 @@ const loginBrute = (
             user {
               email
               id
-              user_name
+              username
             }
           }
         }`,
@@ -232,7 +232,7 @@ mutation UpdateUser($user: UserModify!) {
     message
     user {
       id
-      user_name
+      username
       email
     }
   }
@@ -251,14 +251,14 @@ const putUser = (url: string | Application, token: string) => {
             message
             user {
               id
-              user_name
+              username
               email
             }
           }
         }`,
         variables: {
           user: {
-            user_name: newValue,
+            username: newValue,
           },
         },
       })
@@ -270,7 +270,7 @@ const putUser = (url: string | Application, token: string) => {
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
           expect(userData.user).toHaveProperty('id');
-          expect(userData.user.user_name).toBe(newValue);
+          expect(userData.user.username).toBe(newValue);
           resolve(response.body.data.updateUser);
         }
       });
@@ -283,7 +283,7 @@ mutation DeleteUser {
     message
     user {
       id
-      user_name
+      username
       email
     }
   }
@@ -304,7 +304,7 @@ const deleteUser = (
             message
             user {
               id
-              user_name
+              username
               email
             }
           }
