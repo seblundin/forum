@@ -4,6 +4,7 @@ import CreateThread from '../components/CreateThread'
 import ThreadComponent from '../components/ThreadComponent'
 import { useThreadContext } from '../context/ThreadContext'
 import ButtonBase from '../components/ButtonBase'
+import ButtonColors from '../enums/ButtonColors'
 
 const Home = () => {
   const { threads, addThread } = useThreadContext()
@@ -36,12 +37,12 @@ const Home = () => {
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-5xl font-sans mb-4 text-center p-4">Foorumi</h1>
         <Link to="/login">
-          <ButtonBase color="purple">Login</ButtonBase>
+          <ButtonBase color={ButtonColors.purple}>Login</ButtonBase>
         </Link>
       </div>
       <main className="mt-16 bg-pink-100 text-white p-8 rounded-lg max-w-5xl mx-auto">
         <div>
-          <ButtonBase color="blue" onClick={handleCreateThread}>
+          <ButtonBase color={ButtonColors.blue} onClick={handleCreateThread}>
             Create Thread
           </ButtonBase>
           {showCreateThreadBox && (

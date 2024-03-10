@@ -4,6 +4,7 @@ import Register from '../components/Register'
 import InputBase from '../components/InputBase'
 import useInput from '../hooks/useInput'
 import ButtonBase from '../components/ButtonBase'
+import ButtonColors from '../enums/ButtonColors'
 
 const Login = () => {
   const [showRegister, setShowRegister] = useState(false)
@@ -47,7 +48,7 @@ const Login = () => {
             <InputBase props={password} />
           </div>
 
-          <ButtonBase color="blue">Login</ButtonBase>
+          <ButtonBase color={ButtonColors.blue}>Login</ButtonBase>
 
           <div className="mt-2">
             <p className="text-gray-600 text-sm font-semibold mb-2">
