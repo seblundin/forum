@@ -1,8 +1,6 @@
 /* eslint-disable node/no-unpublished-import */
 import request from 'supertest';
-import {UploadResponse} from '../src/types/MessageTypes';
 import {Application} from 'express';
-import {CatTest, LocationInput, UserTest} from '../src/types/DBTypes';
 import {ThreadTest} from '../src/interfaces/Thread';
 require('dotenv').config();
 
@@ -104,57 +102,233 @@ const postThread = (
           expect(newThread).toHaveProperty('uploadtime');
           expect(newThread).toHaveProperty('mediacontent');
           expect(newThread.owner).toHaveProperty('user_name');
-          expect(newThread.parent).toHaveProperty('id');
+          expect(newThread.parent).toBe(null);
           resolve(newThread);
         }
       });
   });
 };
 
-// add test for graphql query
-/*
-query Query {
-  cats {
-    id
-    cat_name
-    weight
-    location {
-      coordinates
-      type
-    }
-    filename
-    birthdate
-    owner {
-      email
-      id
-      user_name
-    }
-  }
-}
-*/
+const putThread = (
+  url: string | Application,
+  vars: {input: ThreadTest; threadId: string},
+  token: string
+): Promise<ThreadTest> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post('/graphql')
+      .set('Content-type', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        query: `mutation updateThread($id: ID!, $thread: ThreadInput!) {
+          updateThread(id: $id, thread: $thread) {
+            title
+            content
+            uploadtime
+            mediacontent
+            owner {
+              email
+              user_name
+              id
+            }
+            parent
+          }
+        }`,
+        variables: vars,
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const thread = vars.input;
+          const updatedThread = response.body.data.updateThread;
+          expect(updatedThread).toHaveProperty('id');
+          expect(updatedThread.title).toBe(thread.title);
+          expect(updatedThread.content).toBe(thread.content);
+          expect(updatedThread).toHaveProperty('uploadtime');
+          expect(updatedThread).toHaveProperty('mediacontent');
+          expect(updatedThread.owner).toHaveProperty('user_name');
+          expect(updatedThread.parent).toBe(null);
+          resolve(updatedThread);
+        }
+      });
+  });
+};
 
-const getCat = (url: string | Application): Promise<CatTest[]> => {
+const deleteThread = (
+  url: string | Application,
+  id: string,
+  token: string
+): Promise<ThreadTest> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post('/graphql')
+      .set('Content-type', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        query: `mutation deleteThread($id: ID!) {
+          deleteThread(id: $id) {
+            id
+          }
+        }`,
+        variables: {
+          id: id,
+        },
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const deletedThread = response.body.data.deleteThread;
+          expect(deletedThread.id).toBe(id);
+          resolve(deletedThread);
+        }
+      });
+  });
+};
+
+const postComment = (
+  url: string | Application,
+  vars: {input: ThreadTest},
+  token: string
+): Promise<ThreadTest> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post('/graphql')
+      .set('Content-type', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        query: `mutation addComment($comment: CommentInput!) {
+          addComment(comment: $comment) {
+            title
+            content
+            uploadtime
+            mediacontent
+            owner {
+              email
+              user_name
+              id
+            }
+            parent
+          }
+        }`,
+        variables: vars,
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const comment = vars.input;
+          const newComment: ThreadTest = response.body.data.addComment;
+          expect(newComment).toHaveProperty('id');
+          expect(newComment.title).toBe(null);
+          expect(newComment.content).toBe(comment.content);
+          expect(newComment).toHaveProperty('uploadtime');
+          expect(newComment).toHaveProperty('mediacontent');
+          expect(newComment.owner).toHaveProperty('user_name');
+          expect(newComment.parent).toHaveProperty('id');
+          resolve(newComment);
+        }
+      });
+  });
+};
+
+const putComment = (
+  url: string | Application,
+  vars: {input: ThreadTest; commentId: string},
+  token: string
+): Promise<ThreadTest> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post('/graphql')
+      .set('Content-type', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        query: `mutation updateComment($id: ID!, $comment: CommentInput!) {
+          updateComment(id: $id, comment: $comment) {
+            title
+            content
+            uploadtime
+            mediacontent
+            owner {
+              email
+              user_name
+              id
+            }
+            parent
+          }
+        }`,
+        variables: vars,
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const comment = vars.input;
+          const updatedComment = response.body.data.updateComment;
+          expect(updatedComment).toHaveProperty('id');
+          expect(updatedComment.title).toBe(null);
+          expect(updatedComment.content).toBe(comment.content);
+          expect(updatedComment).toHaveProperty('uploadtime');
+          expect(updatedComment).toHaveProperty('mediacontent');
+          expect(updatedComment.owner).toHaveProperty('user_name');
+          expect(updatedComment.parent).toHaveProperty('id');
+          resolve(updatedComment);
+        }
+      });
+  });
+};
+
+const deleteComment = (
+  url: string | Application,
+  id: string,
+  token: string
+): Promise<ThreadTest> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post('/graphql')
+      .set('Content-type', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        query: `mutation deleteComment($id: ID!) {
+          deleteComment(id: $id) {
+            id
+          }
+        }`,
+        variables: {
+          id: id,
+        },
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const deletedComment = response.body.data.deleteComment;
+          expect(deletedComment.id).toBe(id);
+          resolve(deletedComment);
+        }
+      });
+  });
+};
+
+const getThreads = (url: string | Application): Promise<ThreadTest[]> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
         query: `query Query {
-          cats {
-            id
-            cat_name
-            weight
-            location {
-              coordinates
-              type
-            }
-            filename
-            birthdate
+          threads {
+            title
+            content
+            uploadtime
+            mediacontent
             owner {
               email
-              id
               user_name
+              id
             }
+            parent
           }
         }`,
       })
@@ -162,298 +336,89 @@ const getCat = (url: string | Application): Promise<CatTest[]> => {
         if (err) {
           reject(err);
         } else {
-          const cats = response.body.data.cats;
-          expect(cats).toBeInstanceOf(Array);
-          cats.forEach((cat: CatTest) => {
-            expect(cat).toHaveProperty('id');
-            expect(cat).toHaveProperty('cat_name');
-            expect(cat).toHaveProperty('weight');
-            expect(cat).toHaveProperty('location');
-            expect(cat).toHaveProperty('filename');
-            expect(cat).toHaveProperty('birthdate');
-            expect(cat).toHaveProperty('owner');
-            expect(cat.owner).toHaveProperty('email');
-            expect(cat.owner).toHaveProperty('id');
-            expect(cat.owner).toHaveProperty('user_name');
+          const threads = response.body.data.threads;
+          expect(threads).toBeInstanceOf(Array);
+          threads.forEach((thread: ThreadTest) => {
+            expect(thread).toHaveProperty('id');
+            expect(thread).toHaveProperty('title');
+            expect(thread).toHaveProperty('content');
+            expect(thread).toHaveProperty('uploadtime');
+            expect(thread).toHaveProperty('mediacontent');
+            expect(thread.owner).toHaveProperty('user_name');
+            expect(thread.parent).toBe(null);
           });
-          resolve(cats);
+          resolve(threads);
         }
       });
   });
 };
 
-// add test for graphql query
-/*
-query CatById($catByIdId: ID!) {
-  catById(id: $catByIdId) {
-    birthdate
-    cat_name
-    filename
-    id
-    location {
-      type
-      coordinates
-    }
-    owner {
-      email
-      id
-      user_name
-    }
-    weight
-  }
-}
-*/
-
-const getSingleCat = (
+const getSingleThread = (
   url: string | Application,
   id: string
-): Promise<CatTest> => {
+): Promise<ThreadTest> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
-        query: `query CatById($catByIdId: ID!) {
-          catById(id: $catByIdId) {
-            birthdate
-            cat_name
-            filename
-            id
-            location {
-              type
-              coordinates
-            }
+        query: `query threadById($id: ID!) {
+          threadById(id: $id) {
+            title
+            content
+            uploadtime
+            mediacontent
             owner {
               email
-              id
               user_name
+              id
             }
-            weight
+            parent
           }
         }`,
         variables: {
-          catByIdId: id,
+          id: id,
         },
       })
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
-          const cat = response.body.data.catById;
-          expect(cat).toHaveProperty('id');
-          expect(cat).toHaveProperty('cat_name');
-          expect(cat).toHaveProperty('weight');
-          expect(cat).toHaveProperty('location');
-          expect(cat).toHaveProperty('filename');
-          expect(cat).toHaveProperty('birthdate');
-          expect(cat).toHaveProperty('owner');
-          expect(cat.owner).toHaveProperty('email');
-          expect(cat.owner).toHaveProperty('id');
-          expect(cat.owner).toHaveProperty('user_name');
-          resolve(cat);
+          const thread = response.body.data.threadById;
+          expect(thread).toHaveProperty('id');
+          expect(thread).toHaveProperty('title');
+          expect(thread).toHaveProperty('content');
+          expect(thread).toHaveProperty('uploadtime');
+          expect(thread).toHaveProperty('mediacontent');
+          expect(thread.owner).toHaveProperty('user_name');
+          expect(thread.parent).toBe(null);
+          resolve(thread);
         }
       });
   });
 };
 
-// add test for graphql query
-/*
-mutation UpdateCat($updateCatId: ID!, $cat_name: String, $weight: Float, $birthdate: DateTime) {
-  updateCat(id: $updateCatId, cat_name: $cat_name, weight: $weight, birthdate: $birthdate) {
-    birthdate
-    cat_name
-    weight
-  }
-}
-*/
-
-const userPutCat = (
-  url: string | Application,
-  vars: {input: CatTest; updateCatId: string},
-  token: string
-): Promise<CatTest> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .post('/graphql')
-      .set('Content-type', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        query: `mutation UpdateCat($updateCatId: ID!, $input: CatModify!) {
-          updateCat(id: $updateCatId, input: $input) {
-            cat_name
-            birthdate
-            weight
-          }
-        }`,
-        variables: vars,
-      })
-      .expect(200, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const cat = vars.input;
-          const updatedCat = response.body.data.updateCat;
-          expect(updatedCat.cat_name).toBe(cat.cat_name);
-          expect(updatedCat.weight).toBe(cat.weight);
-          expect(updatedCat).toHaveProperty('birthdate');
-          resolve(updatedCat);
-        }
-      });
-  });
-};
-
-const wrongUserPutCat = (
-  url: string | Application,
-  vars: {input: CatTest; updateCatId: string},
-  token: string
-): Promise<CatTest> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .post('/graphql')
-      .set('Content-type', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        query: `mutation UpdateCat($updateCatId: ID!, $input: CatModify!) {
-          updateCat(id: $updateCatId, input: $input) {
-            cat_name
-            birthdate
-            weight
-          }
-        }`,
-        variables: vars,
-      })
-      .expect(200, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const updatedCat = response.body.data.updateCat;
-          expect(updatedCat).toBe(null);
-          resolve(updatedCat);
-        }
-      });
-  });
-};
-
-// add test for graphql query
-/*
-mutation DeleteCat($deleteCatId: ID!) {
-  deleteCat(id: $deleteCatId) {
-    id
-  }
-}
-*/
-
-const userDeleteCat = (
-  url: string | Application,
-  id: string,
-  token: string
-): Promise<CatTest> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .post('/graphql')
-      .set('Content-type', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        query: `mutation DeleteCat($deleteCatId: ID!) {
-          deleteCat(id: $deleteCatId) {
-            id
-          }
-        }`,
-        variables: {
-          deleteCatId: id,
-        },
-      })
-      .expect(200, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const deletedCat = response.body.data.deleteCat;
-          expect(deletedCat.id).toBe(id);
-          resolve(deletedCat);
-        }
-      });
-  });
-};
-
-const wrongUserDeleteCat = (
-  url: string | Application,
-  id: string,
-  token: string
-): Promise<CatTest> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .post('/graphql')
-      .set('Content-type', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        query: `mutation DeleteCat($deleteCatId: ID!) {
-          deleteCat(id: $deleteCatId) {
-            id
-          }
-        }`,
-        variables: {
-          deleteCatId: id,
-        },
-      })
-      .expect(200, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const deletedCat = response.body.data.deleteCat;
-          expect(deletedCat).toBe(null);
-          resolve(deletedCat);
-        }
-      });
-  });
-};
-
-// add test for graphql query
-/*
-query CatsByOwner($ownerId: ID!) {
-  catsByOwner(ownerId: $ownerId) {
-    birthdate
-    cat_name
-    filename
-    id
-    location {
-      coordinates
-      type
-    }
-    owner {
-      user_name
-      id
-      email
-    }
-    weight
-  }
-}
-*/
-
-const getCatByOwner = (
+const getThreadsByOwner = (
   url: string | Application,
   id: string
-): Promise<CatTest[]> => {
+): Promise<ThreadTest[]> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
-        query: `query CatsByOwner($ownerId: ID!) {
-          catsByOwner(ownerId: $ownerId) {
-            birthdate
-            cat_name
-            filename
-            id
-            location {
-              coordinates
-              type
-            }
+        query: `query threadByOwner($ownerId: ID!) {
+          threadByOwner(ownerId: $ownerId) {
+            title
+            content
+            uploadtime
+            mediacontent
             owner {
+              email
               user_name
               id
-              email
             }
-            weight
+            parent
           }
         }`,
         variables: {
@@ -464,85 +429,78 @@ const getCatByOwner = (
         if (err) {
           reject(err);
         } else {
-          const cats = response.body.data.catsByOwner;
-          cats.forEach((cat: CatTest) => {
-            expect(cat).toHaveProperty('id');
-            expect(cat).toHaveProperty('cat_name');
-            expect(cat).toHaveProperty('weight');
-            expect(cat).toHaveProperty('location');
-            expect(cat).toHaveProperty('filename');
-            expect(cat).toHaveProperty('birthdate');
-            expect(cat).toHaveProperty('owner');
-            expect(cat.owner).toHaveProperty('email');
-            expect((cat.owner as UserTest).id).toBe(id);
-            expect(cat.owner).toHaveProperty('id');
-            expect(cat.owner).toHaveProperty('user_name');
+          const threads = response.body.data.threadByOwner;
+          threads.forEach((thread: ThreadTest) => {
+            expect(thread).toHaveProperty('id');
+            expect(thread).toHaveProperty('title');
+            expect(thread).toHaveProperty('content');
+            expect(thread).toHaveProperty('uploadtime');
+            expect(thread).toHaveProperty('mediacontent');
+            expect(thread.owner).toHaveProperty('user_name');
+            expect(thread.parent).toBe(null);
           });
-          resolve(cats);
+          resolve(threads);
         }
       });
   });
 };
 
-// add test for graphql query
-/*
-query CatsByArea($topRight: Coordinates!, $bottomLeft: Coordinates!) {
-  catsByArea(topRight: $topRight, bottomLeft: $bottomLeft) {
-    cat_name
-    location {
-      coordinates
-      type
-    }
-  }
-}
-*/
-
-const getCatByBoundingBox = (
+const getCommentsByThread = (
   url: string | Application,
-  location: LocationInput
-): Promise<CatTest[]> => {
+  id: string
+): Promise<ThreadTest[]> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
-        query: `query CatsByArea($topRight: Coordinates!, $bottomLeft: Coordinates!) {
-          catsByArea(topRight: $topRight, bottomLeft: $bottomLeft) {
-            cat_name
-            location {
-              coordinates
-              type
+        query: `query commentsByThread($threadId: ID!) {
+          commentsByThread(threadId: $threadId) {
+            title
+            content
+            uploadtime
+            mediacontent
+            owner {
+              email
+              user_name
+              id
             }
+            parent
           }
         }`,
-        variables: location,
+        variables: {
+          threadId: id,
+        },
       })
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
-          const cats = response.body.data.catsByArea;
-          cats.forEach((cat: CatTest) => {
-            expect(cat).toHaveProperty('cat_name');
-            expect(cat).toHaveProperty('location');
-            expect(cat.location).toHaveProperty('coordinates');
-            expect(cat.location).toHaveProperty('type');
+          const comments = response.body.data.commentsByThread;
+          comments.forEach((comment: ThreadTest) => {
+            expect(comment).toHaveProperty('id');
+            expect(comment.title).toBe(null);
+            expect(comment).toHaveProperty('content');
+            expect(comment).toHaveProperty('uploadtime');
+            expect(comment).toHaveProperty('mediacontent');
+            expect(comment.owner).toHaveProperty('user_name');
+            expect(comment.parent).toHaveProperty('id');
           });
-          resolve(cats);
+          resolve(comments);
         }
       });
   });
 };
 
 export {
-  postFile,
-  getCat,
-  getSingleCat,
-  postCat,
-  userPutCat,
-  userDeleteCat,
-  wrongUserDeleteCat,
-  wrongUserPutCat,
-  getCatByOwner,
-  getCatByBoundingBox,
+  postThread,
+  putThread,
+  deleteThread,
+  postComment,
+  putComment,
+  deleteComment,
+  getThreads,
+  getSingleThread,
+  getThreadsByOwner,
+  getCommentsByThread,
 };

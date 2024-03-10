@@ -12,7 +12,7 @@ interface UserResponse extends MessageResponse {
   user: UserOutput;
 }
 
-interface LoginResponse extends MessageResponse {
+interface LoginResponse {
   token: string;
   user: UserOutput;
 }

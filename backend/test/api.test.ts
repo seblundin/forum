@@ -1,6 +1,5 @@
 import app from '../src/app';
 import {
-  // adminDeleteUser,
   deleteUser,
   getSingleUser,
   getUser,
@@ -8,14 +7,26 @@ import {
   postUser,
   putUser,
 } from './userFunctions';
+import {
+  postThread,
+  putThread,
+  deleteThread,
+  postComment,
+  putComment,
+  deleteComment,
+  getThreads,
+  getSingleThread,
+  getThreadsByOwner,
+  getCommentsByThread,
+} from './threadFunctions';
 import mongoose from 'mongoose';
 import {getNotFound} from './testFunctions';
 
 import randomstring from 'randomstring';
 import jwt from 'jsonwebtoken';
 import {LoginResponse} from '../src/interfaces/MessageInterfaces';
-import {UserInput} from '../src/interfaces/User';
-import {ThreadTest} from '../src/interfaces/Thread';
+import {UserInput, UserTest} from '../src/interfaces/User';
+import {Thread, ThreadTest} from '../src/interfaces/Thread';
 
 describe('Testing graphql api', () => {
   beforeAll(async () => {
@@ -139,14 +150,14 @@ describe('Testing graphql api', () => {
     };
     const vars = {
       input: newThread,
-      updateThreadId: threadId1,
+      threadId: threadId1,
     };
-    await userPutThread(app, vars, userData.token!);
+    await putThread(app, vars, userData.token!);
   });
 
   // delete thread
   it('should delete a thread', async () => {
-    await userDeleteThread(app, threadId1, userData.token!);
+    await deleteThread(app, threadId1, userData.token!);
   });
 
   let commentId1: string;
@@ -157,8 +168,7 @@ describe('Testing graphql api', () => {
         content: 'Test Content' + randomstring.generate(7),
         uploadtime: new Date('2022-01-01'),
         mediacontent: 'TODO',
-        owner: userData.user,
-        parent: threadId1,
+        parent: threadData1,
       },
     };
     console.log(commentData1);
@@ -173,14 +183,14 @@ describe('Testing graphql api', () => {
     };
     const vars = {
       input: newComment,
-      updateCommentId: commentId1,
+      commentId: commentId1,
     };
-    await userPutComment(app, vars, userData2.token!);
+    await putComment(app, vars, userData2.token!);
   });
 
   // delete comment
   it('should delete a comment', async () => {
-    await userDeleteComment(app, commentId1, userData2.token!);
+    await deleteComment(app, commentId1, userData2.token!);
   });
 
   // test delete user based on token
