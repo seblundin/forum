@@ -1,23 +1,27 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Register from '../components/Register'
 import InputBase from '../components/InputBase'
 import useInput from '../hooks/useInput'
 import ButtonBase from '../components/ButtonBase'
 import ButtonColors from '../enums/ButtonColors'
+import { useUser } from '../context/UserContext'
 
 const Login = () => {
   const [showRegister, setShowRegister] = useState(false)
+  const { login } = useUser()
   const username = useInput({
-    placeholder: 'Enter your username',
+    placeholder: 'Enter your email',
   })
   const password = useInput({
     placeholder: 'Enter your password',
   })
+  const navigate = useNavigate()
 
-  const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log(password.value, username.value)
+    await login({ username: username.value, password: password.value })
+    navigate('/')
   }
 
   const handleRegisterClick = () => {
@@ -34,7 +38,7 @@ const Login = () => {
               htmlFor="username"
               className="block text-gray-600 text-sm font-semibold mb-2"
             >
-              Username
+              Email
             </label>
             <InputBase props={username} />
           </div>
@@ -48,18 +52,15 @@ const Login = () => {
             <InputBase props={password} />
           </div>
 
-          <ButtonBase color={ButtonColors.blue}>Login</ButtonBase>
+          <ButtonBase color={ButtonColors.blue} props={{ type: 'submit' }}>
+            Login
+          </ButtonBase>
 
           <div className="mt-2">
             <p className="text-gray-600 text-sm font-semibold mb-2">
               New User?
             </p>
-            <ButtonBase
-              onClick={handleRegisterClick}
-              props={{ type: 'submit' }}
-            >
-              Register
-            </ButtonBase>
+            <ButtonBase onClick={handleRegisterClick}>Register</ButtonBase>
           </div>
         </form>
 
