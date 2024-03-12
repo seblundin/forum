@@ -2,11 +2,15 @@
 Reply box that can be opened with button click
 */
 import { useState } from 'react'
+import ButtonBase from './ButtonBase'
+import ButtonColors from '../enums/ButtonColors'
 
 const Reply = ({ onSubmit }: { onSubmit: (comment: string) => void }) => {
   const [replyText, setReplyText] = useState('')
 
-  const handleTextareaChange = (event) => {
+  const handleTextareaChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setReplyText(event.target.value)
   }
 
@@ -25,12 +29,9 @@ const Reply = ({ onSubmit }: { onSubmit: (comment: string) => void }) => {
           value={replyText}
           onChange={handleTextareaChange}
         />
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
-          onClick={handleSubmitReply}
-        >
+        <ButtonBase color={ButtonColors.blue} onClick={handleSubmitReply}>
           Submit Reply
-        </button>
+        </ButtonBase>
       </div>
     </>
   )

@@ -1,24 +1,27 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Register from '../components/Register'
+import InputBase from '../components/InputBase'
+import useInput from '../hooks/useInput'
+import ButtonBase from '../components/ButtonBase'
+import ButtonColors from '../enums/ButtonColors'
+import { useUser } from '../context/UserContext'
 
 const Login = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [showRegister, setShowRegister] = useState(false)
+  const { login } = useUser()
+  const username = useInput({
+    placeholder: 'Enter your email',
+  })
+  const password = useInput({
+    placeholder: 'Enter your password',
+  })
+  const navigate = useNavigate()
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
-  }
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log('Username:', username)
-    console.log('Password:', password)
+    await login({ username: username.value, password: password.value })
+    navigate('/')
   }
 
   const handleRegisterClick = () => {
@@ -35,17 +38,9 @@ const Login = () => {
               htmlFor="username"
               className="block text-gray-600 text-sm font-semibold mb-2"
             >
-              Username
+              Email
             </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={username}
-              onChange={handleUsernameChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Enter your username"
-            />
+            <InputBase props={username} />
           </div>
           <div className="mb-4">
             <label
@@ -54,35 +49,18 @@ const Login = () => {
             >
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Enter your password"
-            />
+            <InputBase props={password} />
           </div>
 
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-          >
+          <ButtonBase color={ButtonColors.blue} props={{ type: 'submit' }}>
             Login
-          </button>
+          </ButtonBase>
 
           <div className="mt-2">
             <p className="text-gray-600 text-sm font-semibold mb-2">
               New User?
             </p>
-            <button
-              type="button"
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-              onClick={handleRegisterClick}
-            >
-              Register
-            </button>
+            <ButtonBase onClick={handleRegisterClick}>Register</ButtonBase>
           </div>
         </form>
 

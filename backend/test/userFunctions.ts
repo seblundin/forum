@@ -14,6 +14,7 @@ const getUser = (url: string | Application): Promise<UserTest[]> => {
       .set('Content-type', 'application/json')
       .send({
         query: '{users{id username email}}',
+        query: '{users{id username email}}',
       })
       .expect(200, (err, response) => {
         if (err) {
@@ -22,6 +23,7 @@ const getUser = (url: string | Application): Promise<UserTest[]> => {
           const users = response.body.data.users;
           expect(users).toBeInstanceOf(Array);
           expect(users[0]).toHaveProperty('id');
+          expect(users[0]).toHaveProperty('username');
           expect(users[0]).toHaveProperty('username');
           expect(users[0]).toHaveProperty('email');
           resolve(response.body.data.users);
@@ -33,6 +35,7 @@ const getUser = (url: string | Application): Promise<UserTest[]> => {
 /* test for graphql query
 query UserById($userByIdId: ID!) {
   userById(id: $userByIdId) {
+    username
     username
     id
     email
@@ -51,6 +54,7 @@ const getSingleUser = (
         query: `query UserById($userByIdId: ID!) {
           userById(id: $userByIdId) {
             username
+            username
             id
             email
           }
@@ -65,6 +69,7 @@ const getSingleUser = (
         } else {
           const user = response.body.data.userById;
           expect(user.id).toBe(id);
+          expect(user).toHaveProperty('username');
           expect(user).toHaveProperty('username');
           expect(user).toHaveProperty('email');
           resolve(response.body.data.userById);
@@ -100,12 +105,14 @@ const postUser = (
             user {
               id
               username
+              username
               email
             }
           }
         }`,
         variables: {
           user: {
+            username: user.username,
             username: user.username,
             email: user.email,
             password: user.password,
@@ -120,6 +127,7 @@ const postUser = (
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
           expect(userData.user).toHaveProperty('id');
+          expect(userData.user.username).toBe(user.username);
           expect(userData.user.username).toBe(user.username);
           expect(userData.user.email).toBe(user.email);
           resolve(response.body.data.register);
@@ -157,6 +165,7 @@ const loginUser = (
             message
             user {
               email
+              username
               username
               id
             }

@@ -1,32 +1,45 @@
-import React, { useState } from 'react'
+import { useUser } from '../context/UserContext'
+import useInput from '../hooks/useInput'
+import ButtonBase from './ButtonBase'
+import InputBase from './InputBase'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const username = useInput({
+    id: 'usernameRegister',
+    placeholder: 'Enter your username',
+  })
+  const password = useInput({
+    id: 'passwordRegister',
+    type: 'password',
+    placeholder: 'Enter your password',
+  })
+  const confirmPassword = useInput({
+    type: 'password',
+    id: 'confirmPassword',
+    placeholder: 'Confirm your password',
+  })
+  const email = useInput({
+    id: 'email',
+    type: 'email',
+    placeholder: 'Enter your email',
+  })
+  const { register } = useUser()
+  const navigate = useNavigate()
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
-  }
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
-
-  const handleConfirmPasswordChange = (event) => {
-    setConfirmPassword(event.target.value)
-  }
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (password !== confirmPassword) {
+    if (password.value !== confirmPassword.value) {
       console.error('Passwords do not match')
       return
     }
-
-    console.log('Username:', username)
-    console.log('Password:', password)
+    await register({
+      username: username.value,
+      password: password.value,
+      email: email.value,
+    })
+    navigate('/')
   }
 
   return (
@@ -35,20 +48,21 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
-            htmlFor="username"
+            htmlFor="usernameRegister"
             className="block text-gray-600 text-sm font-semibold mb-2"
           >
             Username
           </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={handleUsernameChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter your username"
-          />
+          <InputBase props={username} />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="email"
+            className="block text-gray-600 text-sm font-semibold mb-2"
+          >
+            Email
+          </label>
+          <InputBase props={email} />
         </div>
         <div className="mb-4">
           <label
@@ -57,15 +71,7 @@ const Register = () => {
           >
             Password
           </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={handlePasswordChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter your password"
-          />
+          <InputBase props={password} />
         </div>
         <div className="mb-4">
           <label
@@ -74,22 +80,9 @@ const Register = () => {
           >
             Confirm Password
           </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Confirm your password"
-          />
+          <InputBase props={confirmPassword} />
         </div>
-        <button
-          type="submit"
-          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-        >
-          Register
-        </button>
+        <ButtonBase props={{ type: 'submit' }}>Register</ButtonBase>
       </form>
     </div>
   )
