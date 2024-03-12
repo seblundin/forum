@@ -3,7 +3,7 @@ import request from 'supertest';
 import randomstring from 'randomstring';
 import {UserTest} from '../src/interfaces/User';
 import {Application} from 'express';
-import LoginResponse from '../src/interfaces/LoginResponse';
+import {LoginResponse} from '../src/interfaces/MessageInterfaces';
 import UserResponse from '../src/interfaces/UserResponse';
 
 // get user from graphql query users
