@@ -23,10 +23,9 @@ import mongoose from 'mongoose';
 import {getNotFound} from './testFunctions';
 
 import randomstring from 'randomstring';
-import jwt from 'jsonwebtoken';
 import {LoginResponse} from '../src/interfaces/MessageInterfaces';
-import {UserInput, UserTest} from '../src/interfaces/User';
-import {Thread, ThreadTest} from '../src/interfaces/Thread';
+import {UserTest} from '../src/interfaces/User';
+import {ThreadTest} from '../src/interfaces/Thread';
 
 describe('Testing graphql api', () => {
   beforeAll(async () => {
@@ -118,7 +117,6 @@ describe('Testing graphql api', () => {
         mediacontent: 'TODO',
       },
     };
-    console.log(threadData1);
     const thread = await postThread(app, threadData1, userData.token!);
     threadId1 = thread.id!;
   });
@@ -147,24 +145,20 @@ describe('Testing graphql api', () => {
   it('should modify a thread', async () => {
     const newThread: ThreadTest = {
       content: 'New Test Content' + randomstring.generate(7),
+      uploadtime: new Date('2022-01-01'),
     };
     const vars = {
-      input: newThread,
-      threadId: threadId1,
+      thread: newThread,
+      id: threadId1,
     };
-    await putThread(app, vars, userData.token!);
-  });
-
-  // delete thread
-  it('should delete a thread', async () => {
-    await deleteThread(app, threadId1, userData.token!);
+    await putThread(app, vars, threadData1.thread, userData.token!);
   });
 
   let commentId1: string;
-  let commentData1: {comment: ThreadTest};
+  let commentData1: {thread: ThreadTest};
   it('should post comment data', async () => {
     commentData1 = {
-      comment: {
+      thread: {
         content: 'Test Content' + randomstring.generate(7),
         uploadtime: new Date('2022-01-01'),
         mediacontent: 'TODO',
@@ -180,10 +174,11 @@ describe('Testing graphql api', () => {
   it('should modify a comment', async () => {
     const newComment: ThreadTest = {
       content: 'New Test Content' + randomstring.generate(7),
+      uploadtime: new Date('1800-01-01'),
     };
     const vars = {
-      input: newComment,
-      commentId: commentId1,
+      thread: newComment,
+      id: commentId1,
     };
     await putComment(app, vars, userData2.token!);
   });
@@ -191,6 +186,11 @@ describe('Testing graphql api', () => {
   // delete comment
   it('should delete a comment', async () => {
     await deleteComment(app, commentId1, userData2.token!);
+  });
+
+  // delete thread
+  it('should delete a thread', async () => {
+    await deleteThread(app, threadId1, userData.token!);
   });
 
   // test delete user based on token

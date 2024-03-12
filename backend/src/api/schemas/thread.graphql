@@ -27,7 +27,4 @@ type Mutation {
   addThread(thread: ThreadInput!): Thread
   updateThread(id: ID!, thread: ThreadInput!): Thread
   deleteThread(id: ID!): Thread
-  addComment(comment: ThreadInput!): Thread
-  updateComment(id: ID!, comment: ThreadInput!): Thread
-  deleteComment(id: ID!): Thread
 }

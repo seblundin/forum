@@ -1,15 +1,12 @@
 import {MyContext} from '../../interfaces/MyContext';
 import {ThreadInput} from '../../interfaces/Thread';
 import threadModel from '../models/threadModel';
-import userModel from '../../../auth_server/src/api/models/userModel';
-import fetchData from '../../functions/fetchData';
-import {User} from '../../interfaces/User';
 
 export default {
   Query: {
     threads: async () => {
       try {
-        return await threadModel.find();
+        return await threadModel.find({parent: null});
       } catch (error) {
         console.log(error);
       }

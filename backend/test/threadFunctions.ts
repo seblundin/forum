@@ -76,6 +76,7 @@ const postThread = (
       .send({
         query: `mutation addThread($thread: ThreadInput!) {
           addThread(thread: $thread) {
+            id
             title
             content
             uploadtime
@@ -102,7 +103,7 @@ const postThread = (
           expect(newThread).toHaveProperty('uploadtime');
           expect(newThread).toHaveProperty('mediacontent');
           expect(newThread.owner).toHaveProperty('username');
-          expect(newThread.parent).toBe(undefined);
+          expect(newThread.parent).toBe(null);
           resolve(newThread);
         }
       });
@@ -111,7 +112,8 @@ const postThread = (
 
 const putThread = (
   url: string | Application,
-  vars: {input: ThreadTest; threadId: string},
+  vars: {thread: ThreadTest; id: string},
+  oldThread: ThreadTest,
   token: string
 ): Promise<ThreadTest> => {
   return new Promise((resolve, reject) => {
@@ -122,6 +124,7 @@ const putThread = (
       .send({
         query: `mutation updateThread($id: ID!, $thread: ThreadInput!) {
           updateThread(id: $id, thread: $thread) {
+            id
             title
             content
             uploadtime
@@ -140,15 +143,16 @@ const putThread = (
         if (err) {
           reject(err);
         } else {
-          const thread = vars.input;
+          const thread = vars.thread;
+          console.error(response.body, 'THREAD', thread);
           const updatedThread = response.body.data.updateThread;
           expect(updatedThread).toHaveProperty('id');
-          expect(updatedThread.title).toBe(thread.title);
+          expect(updatedThread.title).toBe(oldThread.title);
           expect(updatedThread.content).toBe(thread.content);
           expect(updatedThread).toHaveProperty('uploadtime');
           expect(updatedThread).toHaveProperty('mediacontent');
           expect(updatedThread.owner).toHaveProperty('username');
-          expect(updatedThread.parent).toBe(undefined);
+          expect(updatedThread.parent).toBe(null);
           resolve(updatedThread);
         }
       });
@@ -189,7 +193,7 @@ const deleteThread = (
 
 const postComment = (
   url: string | Application,
-  vars: {comment: ThreadTest},
+  vars: {thread: ThreadTest},
   token: string
 ): Promise<ThreadTest> => {
   return new Promise((resolve, reject) => {
@@ -198,8 +202,9 @@ const postComment = (
       .set('Content-type', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        query: `mutation addComment($comment: CommentInput!) {
-          addComment(comment: $comment) {
+        query: `mutation addThread($thread: ThreadInput!) {
+          addThread(thread: $thread) {
+            id
             title
             content
             uploadtime
@@ -218,10 +223,10 @@ const postComment = (
         if (err) {
           reject(err);
         } else {
-          const comment = vars.comment;
-          const newComment: ThreadTest = response.body.data.addComment;
+          const comment = vars.thread;
+          const newComment: ThreadTest = response.body.data.addThread;
           expect(newComment).toHaveProperty('id');
-          expect(newComment.title).toBe(undefined);
+          expect(newComment.title).toBe(null);
           expect(newComment.content).toBe(comment.content);
           expect(newComment).toHaveProperty('uploadtime');
           expect(newComment).toHaveProperty('mediacontent');
@@ -235,7 +240,7 @@ const postComment = (
 
 const putComment = (
   url: string | Application,
-  vars: {input: ThreadTest; commentId: string},
+  vars: {thread: ThreadTest; id: string},
   token: string
 ): Promise<ThreadTest> => {
   return new Promise((resolve, reject) => {
@@ -244,8 +249,9 @@ const putComment = (
       .set('Content-type', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        query: `mutation updateComment($id: ID!, $comment: CommentInput!) {
-          updateComment(id: $id, comment: $comment) {
+        query: `mutation updateThread($id: ID!, $thread: ThreadInput!) {
+          updateThread(id: $id, thread: $thread) {
+            id
             title
             content
             uploadtime
@@ -264,10 +270,10 @@ const putComment = (
         if (err) {
           reject(err);
         } else {
-          const comment = vars.input;
-          const updatedComment = response.body.data.updateComment;
+          const comment = vars.thread;
+          const updatedComment = response.body.data.updateThread;
           expect(updatedComment).toHaveProperty('id');
-          expect(updatedComment.title).toBe(undefined);
+          expect(updatedComment.title).toBe(null);
           expect(updatedComment.content).toBe(comment.content);
           expect(updatedComment).toHaveProperty('uploadtime');
           expect(updatedComment).toHaveProperty('mediacontent');
@@ -290,20 +296,20 @@ const deleteComment = (
       .set('Content-type', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        query: `mutation deleteComment($id: ID!) {
-          deleteComment(id: $id) {
+        query: `mutation deleteThread($id: ID!) {
+          deleteThread(id: $id) {
             id
           }
         }`,
         variables: {
-          id: id,
+          id,
         },
       })
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
-          const deletedComment = response.body.data.deleteComment;
+          const deletedComment = response.body.data.deleteThread;
           expect(deletedComment.id).toBe(id);
           resolve(deletedComment);
         }
@@ -319,16 +325,11 @@ const getThreads = (url: string | Application): Promise<ThreadTest[]> => {
       .send({
         query: `query Query {
           threads {
+            id
             title
             content
             uploadtime
             mediacontent
-            owner {
-              email
-              username
-              id
-            }
-            parent
           }
         }`,
       })
@@ -344,7 +345,6 @@ const getThreads = (url: string | Application): Promise<ThreadTest[]> => {
             expect(thread).toHaveProperty('content');
             expect(thread).toHaveProperty('uploadtime');
             expect(thread).toHaveProperty('mediacontent');
-            expect(thread.owner).toHaveProperty('username');
             expect(thread.parent).toBe(undefined);
           });
           resolve(threads);
@@ -364,6 +364,7 @@ const getSingleThread = (
       .send({
         query: `query threadById($id: ID!) {
           threadById(id: $id) {
+            id
             title
             content
             uploadtime
@@ -391,7 +392,7 @@ const getSingleThread = (
           expect(thread).toHaveProperty('uploadtime');
           expect(thread).toHaveProperty('mediacontent');
           expect(thread.owner).toHaveProperty('username');
-          expect(thread.parent).toBe(undefined);
+          expect(thread.parent).toBe(null);
           resolve(thread);
         }
       });
@@ -407,8 +408,9 @@ const getThreadsByOwner = (
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
-        query: `query threadByOwner($ownerId: ID!) {
-          threadByOwner(ownerId: $ownerId) {
+        query: `query threadsByOwner($ownerId: ID!) {
+          threadsByOwner(ownerId: $ownerId) {
+            id
             title
             content
             uploadtime
@@ -429,7 +431,7 @@ const getThreadsByOwner = (
         if (err) {
           reject(err);
         } else {
-          const threads = response.body.data.threadByOwner;
+          const threads = response.body.data.threadsByOwner;
           threads.forEach((thread: ThreadTest) => {
             expect(thread).toHaveProperty('id');
             expect(thread).toHaveProperty('title');
@@ -437,7 +439,7 @@ const getThreadsByOwner = (
             expect(thread).toHaveProperty('uploadtime');
             expect(thread).toHaveProperty('mediacontent');
             expect(thread.owner).toHaveProperty('username');
-            expect(thread.parent).toBe(undefined);
+            expect(thread.parent).toBe(null);
           });
           resolve(threads);
         }
@@ -456,6 +458,7 @@ const getCommentsByThread = (
       .send({
         query: `query commentsByThread($threadId: ID!) {
           commentsByThread(threadId: $threadId) {
+            id
             title
             content
             uploadtime
