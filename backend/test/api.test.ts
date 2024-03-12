@@ -1,6 +1,5 @@
 import app from '../src/app';
 import {
-  // adminDeleteUser,
   deleteUser,
   getSingleUser,
   getUser,
@@ -8,13 +7,25 @@ import {
   postUser,
   putUser,
 } from './userFunctions';
+import {
+  postThread,
+  putThread,
+  deleteThread,
+  postComment,
+  putComment,
+  deleteComment,
+  getThreads,
+  getSingleThread,
+  getThreadsByOwner,
+  getCommentsByThread,
+} from './threadFunctions';
 import mongoose from 'mongoose';
 import {getNotFound} from './testFunctions';
 
 import randomstring from 'randomstring';
-import jwt from 'jsonwebtoken';
 import {LoginResponse} from '../src/interfaces/MessageInterfaces';
-import {UserInput} from '../src/interfaces/User';
+import {UserTest} from '../src/interfaces/User';
+import {ThreadTest} from '../src/interfaces/Thread';
 
 describe('Testing graphql api', () => {
   beforeAll(async () => {
@@ -32,33 +43,26 @@ describe('Testing graphql api', () => {
 
   // test create user
   let userData: LoginResponse;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let userData2: LoginResponse;
-  // let adminData: LoginResponse;
 
-  const testUser: UserInput = {
+  const testUser: UserTest = {
     username: 'Test User ' + randomstring.generate(7),
     email: randomstring.generate(9) + '@user.fi',
     password: 'testpassword',
   };
 
-  const testUser2: UserInput = {
+  const testUser2: UserTest = {
     username: 'Test User ' + randomstring.generate(7),
     email: randomstring.generate(9) + '@user.fi',
     password: 'testpassword',
   };
-
-  // const adminUser = {
-  //   email: 'admin@metropolia.fi',
-  //   password: '12345',
-  // };
 
   // create first user
   it('should create a new user', async () => {
     await postUser(app, testUser);
   });
 
-  // create second user to try to modify someone else's cats and userdata
+  // create second user
   it('should create second user', async () => {
     await postUser(app, testUser2);
   });
@@ -85,26 +89,6 @@ describe('Testing graphql api', () => {
     userData2 = await loginUser(app, vars);
   });
 
-  // test login with admin
-  // it('should login admin', async () => {
-  //   const vars = {
-  //     credentials: {
-  //       username: adminUser.email!,
-  //       password: adminUser.password!,
-  //     },
-  //   };
-  //   adminData = await loginUser(app, vars);
-  // });
-
-  // make sure token has role (so that we can test if user is admin or not)
-  it('token should have role', async () => {
-    const dataFromToken = jwt.verify(
-      userData.token!,
-      process.env.JWT_SECRET as string
-    );
-    expect(dataFromToken).toHaveProperty('role');
-  });
-
   // test get all users
   it('should return array of users', async () => {
     await getUser(app);
@@ -120,22 +104,94 @@ describe('Testing graphql api', () => {
     await putUser(app, userData.token!);
   });
 
-  // test delete user by id as admin
-  // it('should delete a user as admin', async () => {
-  //   const result = await adminDeleteUser(
-  //     app,
-  //     userData2.user.id,
-  //     adminData.token
-  //   );
-  //   console.error(result);
-  //   console.log(
-  //     'user2id',
-  //     userData2.user.id,
-  //     'adminid',
-  //     adminData.user.id,
-  //     result
-  //   );
-  // });
+  // test post thread data
+  // TODO: add mediacontent
+  let threadId1: string;
+  let threadData1: {thread: ThreadTest};
+  it('should post thread data', async () => {
+    threadData1 = {
+      thread: {
+        title: 'Test Title' + randomstring.generate(7),
+        content: 'Test Content' + randomstring.generate(7),
+        uploadtime: new Date('2022-01-01'),
+        mediacontent: 'TODO',
+      },
+    };
+    const thread = await postThread(app, threadData1, userData.token!);
+    threadId1 = thread.id!;
+  });
+
+  // test get all threads
+  it('should return array of threads', async () => {
+    await getThreads(app);
+  });
+
+  // test get single thread
+  it('should return single thread', async () => {
+    await getSingleThread(app, threadId1);
+  });
+
+  // get threads by user id
+  it('should return threads by current user', async () => {
+    await getThreadsByOwner(app, userData.user.id!);
+  });
+
+  // get threads by user id
+  it('should return threads by current user', async () => {
+    await getCommentsByThread(app, threadId1!);
+  });
+
+  // modify thread
+  it('should modify a thread', async () => {
+    const newThread: ThreadTest = {
+      content: 'New Test Content' + randomstring.generate(7),
+      uploadtime: new Date('2022-01-01'),
+    };
+    const vars = {
+      thread: newThread,
+      id: threadId1,
+    };
+    await putThread(app, vars, threadData1.thread, userData.token!);
+  });
+
+  let commentId1: string;
+  let commentData1: {thread: ThreadTest};
+  it('should post comment data', async () => {
+    commentData1 = {
+      thread: {
+        content: 'Test Content' + randomstring.generate(7),
+        uploadtime: new Date('2022-01-01'),
+        mediacontent: 'TODO',
+        parent: threadId1,
+      },
+    };
+    console.log(commentData1);
+    const comment = await postComment(app, commentData1, userData2.token!);
+    commentId1 = comment.id!;
+  });
+
+  // modify comment
+  it('should modify a comment', async () => {
+    const newComment: ThreadTest = {
+      content: 'New Test Content' + randomstring.generate(7),
+      uploadtime: new Date('1800-01-01'),
+    };
+    const vars = {
+      thread: newComment,
+      id: commentId1,
+    };
+    await putComment(app, vars, userData2.token!);
+  });
+
+  // delete comment
+  it('should delete a comment', async () => {
+    await deleteComment(app, commentId1, userData2.token!);
+  });
+
+  // delete thread
+  it('should delete a thread', async () => {
+    await deleteThread(app, threadId1, userData.token!);
+  });
 
   // test delete user based on token
   it('should delete current user', async () => {

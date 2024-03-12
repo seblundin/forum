@@ -1,12 +1,13 @@
 /* eslint-disable node/no-unpublished-import */
 import request from 'supertest';
 import randomstring from 'randomstring';
-import {UserInput} from '../src/interfaces/User';
+import {UserTest} from '../src/interfaces/User';
 import {Application} from 'express';
-import {LoginResponse, UserResponse} from '../src/interfaces/MessageInterfaces';
+import {LoginResponse} from '../src/interfaces/MessageInterfaces';
+import UserResponse from '../src/interfaces/UserResponse';
 
 // get user from graphql query users
-const getUser = (url: string | Application): Promise<UserInput[]> => {
+const getUser = (url: string | Application): Promise<UserTest[]> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
@@ -22,6 +23,7 @@ const getUser = (url: string | Application): Promise<UserInput[]> => {
           expect(users).toBeInstanceOf(Array);
           expect(users[0]).toHaveProperty('id');
           expect(users[0]).toHaveProperty('username');
+          expect(users[0]).toHaveProperty('username');
           expect(users[0]).toHaveProperty('email');
           resolve(response.body.data.users);
         }
@@ -33,6 +35,7 @@ const getUser = (url: string | Application): Promise<UserInput[]> => {
 query UserById($userByIdId: ID!) {
   userById(id: $userByIdId) {
     username
+    username
     id
     email
   }
@@ -41,7 +44,7 @@ query UserById($userByIdId: ID!) {
 const getSingleUser = (
   url: string | Application,
   id: string
-): Promise<UserInput> => {
+): Promise<UserTest> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
@@ -49,6 +52,7 @@ const getSingleUser = (
       .send({
         query: `query UserById($userByIdId: ID!) {
           userById(id: $userByIdId) {
+            username
             username
             id
             email
@@ -64,6 +68,7 @@ const getSingleUser = (
         } else {
           const user = response.body.data.userById;
           expect(user.id).toBe(id);
+          expect(user).toHaveProperty('username');
           expect(user).toHaveProperty('username');
           expect(user).toHaveProperty('email');
           resolve(response.body.data.userById);
@@ -86,8 +91,8 @@ mutation Mutation($user: UserInput!) {
 */
 const postUser = (
   url: string | Application,
-  user: UserInput
-): Promise<UserInput> => {
+  user: UserTest
+): Promise<UserTest> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
@@ -98,6 +103,7 @@ const postUser = (
             message
             user {
               id
+              username
               username
               email
             }
@@ -119,6 +125,7 @@ const postUser = (
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
           expect(userData.user).toHaveProperty('id');
+          expect(userData.user.username).toBe(user.username);
           expect(userData.user.username).toBe(user.username);
           expect(userData.user.email).toBe(user.email);
           resolve(response.body.data.register);
@@ -157,6 +164,7 @@ const loginUser = (
             user {
               email
               username
+              username
               id
             }
           }
@@ -175,51 +183,6 @@ const loginUser = (
           expect(userData.user).toHaveProperty('id');
           expect(userData.user.email).toBe(user.username);
           resolve(response.body.data.login);
-        }
-      });
-  });
-};
-
-const loginBrute = (
-  url: string | Application,
-  user: UserInput
-): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .post('/graphql')
-      .set('Content-type', 'application/json')
-      .send({
-        query: `mutation Login($credentials: Credentials!) {
-          login(credentials: $credentials) {
-            message
-            token
-            user {
-              email
-              id
-              username
-            }
-          }
-        }`,
-        variables: {
-          credentials: {
-            username: user.email,
-            password: user.password,
-          },
-        },
-      })
-      .expect(200, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          if (
-            response.body.errors?.[0]?.message ===
-            "You are trying to access 'login' too often"
-          ) {
-            console.log('brute blocked', response.body.errors[0].message);
-            resolve(true);
-          } else {
-            resolve(false);
-          }
         }
       });
   });
@@ -323,81 +286,4 @@ const deleteUser = (
   });
 };
 
-const adminDeleteUser = (
-  url: string | Application,
-  id: string,
-  token: string
-): Promise<UserResponse> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .post('/graphql')
-      .set('Authorization', 'Bearer ' + token)
-      .send({
-        query: `mutation DeleteUserAsAdmin($deleteUserAsAdminId: ID!) {
-          deleteUserAsAdmin(id: $deleteUserAsAdminId) {
-            user {
-              id
-            }
-          }
-        }`,
-        variables: {
-          deleteUserAsAdminId: id,
-        },
-      })
-      .expect(200, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const userData = response.body.data.deleteUserAsAdmin;
-          expect(userData.user.id).toBe(id);
-          console.log('delete user as admin', userData);
-          resolve(userData);
-        }
-      });
-  });
-};
-
-const wrongUserDeleteUser = (
-  url: string | Application,
-  id: string,
-  token: string
-): Promise<UserResponse> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .post('/graphql')
-      .set('Authorization', 'Bearer ' + token)
-      .send({
-        query: `mutation DeleteUserAsAdmin($deleteUserAsAdminId: ID!) {
-          deleteUserAsAdmin(id: $deleteUserAsAdminId) {
-            user {
-              id
-            }
-          }
-        }`,
-        variables: {
-          deleteUserAsAdminId: id,
-        },
-      })
-      .expect(200, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const userData = response.body.data.deleteUserAsAdmin;
-          expect(userData).toBe(null);
-          resolve(response.body.data.deleteUser);
-        }
-      });
-  });
-};
-
-export {
-  getUser,
-  getSingleUser,
-  postUser,
-  putUser,
-  deleteUser,
-  loginUser,
-  loginBrute,
-  adminDeleteUser,
-  wrongUserDeleteUser,
-};
+export {getUser, getSingleUser, postUser, loginUser, putUser, deleteUser};

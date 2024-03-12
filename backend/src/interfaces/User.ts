@@ -28,4 +28,7 @@ interface TokenContent {
   user: LoginUser;
 }
 
-export {User, UserOutput, UserInput, LoginUser, TokenContent};
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface UserTest extends Partial<User> {}
+
+export {User, UserOutput, UserInput, LoginUser, TokenContent, UserTest};

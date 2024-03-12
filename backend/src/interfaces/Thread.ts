@@ -1,13 +1,14 @@
+import {Document} from 'mongoose';
 import {User} from './User';
 
-interface Thread {
+interface Thread extends Document {
   id: string;
   title?: string;
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: User;
-  parent?: Thread;
+  owner: string | User;
+  parent?: string;
 }
 
 interface TheadOutput {
@@ -16,32 +17,19 @@ interface TheadOutput {
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: User;
+  owner: string | User;
+  parent?: string;
 }
 
 interface ThreadInput {
-  title: string;
+  title?: string;
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: User;
+  parent?: string;
 }
 
-interface CommentOutput {
-  id: string;
-  content: string;
-  uploadtime: Date;
-  mediacontent?: string;
-  owner: User;
-  parent: Thread;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ThreadTest extends Partial<Thread> {}
 
-interface CommentInput {
-  content: string;
-  uploadtime: Date;
-  mediacontent?: string;
-  owner: User;
-  parent: Thread;
-}
-
-export {Thread, TheadOutput, ThreadInput, CommentOutput, CommentInput};
+export {Thread, TheadOutput, ThreadInput, ThreadTest};
