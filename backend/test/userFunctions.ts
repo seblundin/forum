@@ -14,7 +14,6 @@ const getUser = (url: string | Application): Promise<UserTest[]> => {
       .set('Content-type', 'application/json')
       .send({
         query: '{users{id username email}}',
-        query: '{users{id username email}}',
       })
       .expect(200, (err, response) => {
         if (err) {
@@ -112,7 +111,6 @@ const postUser = (
         }`,
         variables: {
           user: {
-            username: user.username,
             username: user.username,
             email: user.email,
             password: user.password,
