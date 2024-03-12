@@ -22,7 +22,7 @@ mutation CreateCat($cat_name: String!, $weight: Float!, $birthdate: DateTime!, $
     weight
     birthdate
     owner {
-      user_name
+      username
     }
     location {
       coordinates
@@ -82,7 +82,7 @@ const postThread = (
             mediacontent
             owner {
               email
-              user_name
+              username
               id
             }
             parent
@@ -101,7 +101,7 @@ const postThread = (
           expect(newThread.content).toBe(thread.content);
           expect(newThread).toHaveProperty('uploadtime');
           expect(newThread).toHaveProperty('mediacontent');
-          expect(newThread.owner).toHaveProperty('user_name');
+          expect(newThread.owner).toHaveProperty('username');
           expect(newThread.parent).toBe(undefined);
           resolve(newThread);
         }
@@ -128,7 +128,7 @@ const putThread = (
             mediacontent
             owner {
               email
-              user_name
+              username
               id
             }
             parent
@@ -147,7 +147,7 @@ const putThread = (
           expect(updatedThread.content).toBe(thread.content);
           expect(updatedThread).toHaveProperty('uploadtime');
           expect(updatedThread).toHaveProperty('mediacontent');
-          expect(updatedThread.owner).toHaveProperty('user_name');
+          expect(updatedThread.owner).toHaveProperty('username');
           expect(updatedThread.parent).toBe(undefined);
           resolve(updatedThread);
         }
@@ -206,7 +206,7 @@ const postComment = (
             mediacontent
             owner {
               email
-              user_name
+              username
               id
             }
             parent
@@ -225,7 +225,7 @@ const postComment = (
           expect(newComment.content).toBe(comment.content);
           expect(newComment).toHaveProperty('uploadtime');
           expect(newComment).toHaveProperty('mediacontent');
-          expect(newComment.owner).toHaveProperty('user_name');
+          expect(newComment.owner).toHaveProperty('username');
           expect(newComment).toHaveProperty('parent');
           resolve(newComment);
         }
@@ -252,7 +252,7 @@ const putComment = (
             mediacontent
             owner {
               email
-              user_name
+              username
               id
             }
             parent
@@ -271,7 +271,7 @@ const putComment = (
           expect(updatedComment.content).toBe(comment.content);
           expect(updatedComment).toHaveProperty('uploadtime');
           expect(updatedComment).toHaveProperty('mediacontent');
-          expect(updatedComment.owner).toHaveProperty('user_name');
+          expect(updatedComment.owner).toHaveProperty('username');
           expect(updatedComment).toHaveProperty('parent');
           resolve(updatedComment);
         }
@@ -325,7 +325,7 @@ const getThreads = (url: string | Application): Promise<ThreadTest[]> => {
             mediacontent
             owner {
               email
-              user_name
+              username
               id
             }
             parent
@@ -344,7 +344,7 @@ const getThreads = (url: string | Application): Promise<ThreadTest[]> => {
             expect(thread).toHaveProperty('content');
             expect(thread).toHaveProperty('uploadtime');
             expect(thread).toHaveProperty('mediacontent');
-            expect(thread.owner).toHaveProperty('user_name');
+            expect(thread.owner).toHaveProperty('username');
             expect(thread.parent).toBe(undefined);
           });
           resolve(threads);
@@ -370,7 +370,7 @@ const getSingleThread = (
             mediacontent
             owner {
               email
-              user_name
+              username
               id
             }
             parent
@@ -390,7 +390,7 @@ const getSingleThread = (
           expect(thread).toHaveProperty('content');
           expect(thread).toHaveProperty('uploadtime');
           expect(thread).toHaveProperty('mediacontent');
-          expect(thread.owner).toHaveProperty('user_name');
+          expect(thread.owner).toHaveProperty('username');
           expect(thread.parent).toBe(undefined);
           resolve(thread);
         }
@@ -415,7 +415,7 @@ const getThreadsByOwner = (
             mediacontent
             owner {
               email
-              user_name
+              username
               id
             }
             parent
@@ -436,7 +436,7 @@ const getThreadsByOwner = (
             expect(thread).toHaveProperty('content');
             expect(thread).toHaveProperty('uploadtime');
             expect(thread).toHaveProperty('mediacontent');
-            expect(thread.owner).toHaveProperty('user_name');
+            expect(thread.owner).toHaveProperty('username');
             expect(thread.parent).toBe(undefined);
           });
           resolve(threads);
@@ -462,7 +462,7 @@ const getCommentsByThread = (
             mediacontent
             owner {
               email
-              user_name
+              username
               id
             }
             parent
@@ -483,7 +483,7 @@ const getCommentsByThread = (
             expect(comment).toHaveProperty('content');
             expect(comment).toHaveProperty('uploadtime');
             expect(comment).toHaveProperty('mediacontent');
-            expect(comment.owner).toHaveProperty('user_name');
+            expect(comment.owner).toHaveProperty('username');
             expect(comment).toHaveProperty('parent');
           });
           resolve(comments);

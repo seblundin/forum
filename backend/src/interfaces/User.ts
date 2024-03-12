@@ -1,25 +1,25 @@
 interface User extends Document {
   id: string;
-  user_name: string;
+  username: string;
   email: string;
   password: string;
 }
 
 interface UserOutput {
   id: string;
-  user_name: string;
+  username: string;
   email: string;
 }
 
 interface UserInput {
-  user_name: string;
+  username: string;
   email: string;
   password?: string;
 }
 
 interface LoginUser {
   id: string;
-  user_name: string;
+  username: string;
   email: string;
 }
 
