@@ -10,7 +10,7 @@ export default {
   Thread: {
     owner: async (parent: Thread) => {
       return await fetchData<User>(
-        `${process.env.AUTH_URL}/users/${parent.owner}`
+        `${process.env.AUTH_URL}/users/${parent.owner.toString()}`
       );
     },
   },

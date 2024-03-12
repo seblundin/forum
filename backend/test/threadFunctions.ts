@@ -65,7 +65,7 @@ const postFile = (
 
 const postThread = (
   url: string | Application,
-  vars: {input: ThreadTest},
+  vars: {thread: ThreadTest},
   token: string
 ): Promise<ThreadTest> => {
   return new Promise((resolve, reject) => {
@@ -94,7 +94,7 @@ const postThread = (
         if (err) {
           reject(err);
         } else {
-          const thread = vars.input;
+          const thread = vars.thread;
           const newThread: ThreadTest = response.body.data.addThread;
           expect(newThread).toHaveProperty('id');
           expect(newThread.title).toBe(thread.title);
@@ -102,7 +102,7 @@ const postThread = (
           expect(newThread).toHaveProperty('uploadtime');
           expect(newThread).toHaveProperty('mediacontent');
           expect(newThread.owner).toHaveProperty('user_name');
-          expect(newThread.parent).toBe(null);
+          expect(newThread.parent).toBe(undefined);
           resolve(newThread);
         }
       });
@@ -148,7 +148,7 @@ const putThread = (
           expect(updatedThread).toHaveProperty('uploadtime');
           expect(updatedThread).toHaveProperty('mediacontent');
           expect(updatedThread.owner).toHaveProperty('user_name');
-          expect(updatedThread.parent).toBe(null);
+          expect(updatedThread.parent).toBe(undefined);
           resolve(updatedThread);
         }
       });
@@ -189,7 +189,7 @@ const deleteThread = (
 
 const postComment = (
   url: string | Application,
-  vars: {input: ThreadTest},
+  vars: {comment: ThreadTest},
   token: string
 ): Promise<ThreadTest> => {
   return new Promise((resolve, reject) => {
@@ -218,15 +218,15 @@ const postComment = (
         if (err) {
           reject(err);
         } else {
-          const comment = vars.input;
+          const comment = vars.comment;
           const newComment: ThreadTest = response.body.data.addComment;
           expect(newComment).toHaveProperty('id');
-          expect(newComment.title).toBe(null);
+          expect(newComment.title).toBe(undefined);
           expect(newComment.content).toBe(comment.content);
           expect(newComment).toHaveProperty('uploadtime');
           expect(newComment).toHaveProperty('mediacontent');
           expect(newComment.owner).toHaveProperty('user_name');
-          expect(newComment.parent).toHaveProperty('id');
+          expect(newComment).toHaveProperty('parent');
           resolve(newComment);
         }
       });
@@ -267,12 +267,12 @@ const putComment = (
           const comment = vars.input;
           const updatedComment = response.body.data.updateComment;
           expect(updatedComment).toHaveProperty('id');
-          expect(updatedComment.title).toBe(null);
+          expect(updatedComment.title).toBe(undefined);
           expect(updatedComment.content).toBe(comment.content);
           expect(updatedComment).toHaveProperty('uploadtime');
           expect(updatedComment).toHaveProperty('mediacontent');
           expect(updatedComment.owner).toHaveProperty('user_name');
-          expect(updatedComment.parent).toHaveProperty('id');
+          expect(updatedComment).toHaveProperty('parent');
           resolve(updatedComment);
         }
       });
@@ -345,7 +345,7 @@ const getThreads = (url: string | Application): Promise<ThreadTest[]> => {
             expect(thread).toHaveProperty('uploadtime');
             expect(thread).toHaveProperty('mediacontent');
             expect(thread.owner).toHaveProperty('user_name');
-            expect(thread.parent).toBe(null);
+            expect(thread.parent).toBe(undefined);
           });
           resolve(threads);
         }
@@ -391,7 +391,7 @@ const getSingleThread = (
           expect(thread).toHaveProperty('uploadtime');
           expect(thread).toHaveProperty('mediacontent');
           expect(thread.owner).toHaveProperty('user_name');
-          expect(thread.parent).toBe(null);
+          expect(thread.parent).toBe(undefined);
           resolve(thread);
         }
       });
@@ -437,7 +437,7 @@ const getThreadsByOwner = (
             expect(thread).toHaveProperty('uploadtime');
             expect(thread).toHaveProperty('mediacontent');
             expect(thread.owner).toHaveProperty('user_name');
-            expect(thread.parent).toBe(null);
+            expect(thread.parent).toBe(undefined);
           });
           resolve(threads);
         }
@@ -484,7 +484,7 @@ const getCommentsByThread = (
             expect(comment).toHaveProperty('uploadtime');
             expect(comment).toHaveProperty('mediacontent');
             expect(comment.owner).toHaveProperty('user_name');
-            expect(comment.parent).toHaveProperty('id');
+            expect(comment).toHaveProperty('parent');
           });
           resolve(comments);
         }

@@ -1,14 +1,14 @@
-import {Types} from 'mongoose';
+import {Document} from 'mongoose';
 import {User} from './User';
 
-interface Thread {
+interface Thread extends Document {
   id: string;
   title?: string;
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: Types.ObjectId | User;
-  parent?: Types.ObjectId | Thread;
+  owner: string | User;
+  parent?: string;
 }
 
 interface TheadOutput {
@@ -17,40 +17,19 @@ interface TheadOutput {
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-  owner: Types.ObjectId | User;
+  owner: string | User;
+  parent?: string;
 }
 
 interface ThreadInput {
-  title: string;
+  title?: string;
   content: string;
   uploadtime: Date;
   mediacontent?: string;
-}
-
-interface CommentOutput {
-  id: string;
-  content: string;
-  uploadtime: Date;
-  mediacontent?: string;
-  owner: Types.ObjectId | User;
-  parent: Types.ObjectId | Thread;
-}
-
-interface CommentInput {
-  content: string;
-  uploadtime: Date;
-  mediacontent?: string;
-  parent: Types.ObjectId | Thread;
+  parent?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ThreadTest extends Partial<Thread> {}
 
-export {
-  Thread,
-  TheadOutput,
-  ThreadInput,
-  CommentOutput,
-  CommentInput,
-  ThreadTest,
-};
+export {Thread, TheadOutput, ThreadInput, ThreadTest};

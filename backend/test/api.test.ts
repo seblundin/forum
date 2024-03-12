@@ -108,10 +108,10 @@ describe('Testing graphql api', () => {
   // test post thread data
   // TODO: add mediacontent
   let threadId1: string;
-  let threadData1: {input: ThreadTest};
+  let threadData1: {thread: ThreadTest};
   it('should post thread data', async () => {
     threadData1 = {
-      input: {
+      thread: {
         title: 'Test Title' + randomstring.generate(7),
         content: 'Test Content' + randomstring.generate(7),
         uploadtime: new Date('2022-01-01'),
@@ -161,14 +161,14 @@ describe('Testing graphql api', () => {
   });
 
   let commentId1: string;
-  let commentData1: {input: ThreadTest};
+  let commentData1: {comment: ThreadTest};
   it('should post comment data', async () => {
     commentData1 = {
-      input: {
+      comment: {
         content: 'Test Content' + randomstring.generate(7),
         uploadtime: new Date('2022-01-01'),
         mediacontent: 'TODO',
-        parent: threadData1,
+        parent: threadId1,
       },
     };
     console.log(commentData1);

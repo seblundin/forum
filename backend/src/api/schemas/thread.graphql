@@ -5,55 +5,29 @@ type Thread {
   uploadtime: String!
   mediacontent: String
   owner: User!
-  parent: Thread
+  parent: String
 }
 
-type ThreadOutput {
-  id: ID!
+input ThreadInput {
   title: String
   content: String!
   uploadtime: String!
   mediacontent: String
-  owner: User!
-}
-
-input ThreadInput {
-  title: String!
-  content: String!
-  uploadtime: String!
-  mediacontent: String
-  owner: String!
-}
-
-type CommentOutput {
-  id: ID!
-  content: String!
-  uploadtime: String!
-  mediacontent: String
-  owner: User!
-  parent: Thread!
-}
-
-input CommentInput {
-  content: String!
-  uploadtime: String!
-  mediacontent: String!
-  owner: String!
-  parent: String!
+  parent: String
 }
 
 type Query {
   threads: [Thread]
   threadById(id: ID!): Thread
-  threadByOwner(ownerId: ID!): Thread
+  threadsByOwner(ownerId: ID!): [Thread]
   commentsByThread(threadId: ID!): [Thread]
 }
 
 type Mutation {
-  addThread(thread: ThreadInput!): ThreadOutput
-  updateThread(id: ID!, thread: ThreadInput!): ThreadOutput
+  addThread(thread: ThreadInput!): Thread
+  updateThread(id: ID!, thread: ThreadInput!): Thread
   deleteThread(id: ID!): Thread
-  addComment(comment: CommentInput!): CommentOutput
-  updateComment(id: ID!, comment: CommentInput!): CommentOutput
+  addComment(comment: ThreadInput!): Thread
+  updateComment(id: ID!, comment: ThreadInput!): Thread
   deleteComment(id: ID!): Thread
 }
