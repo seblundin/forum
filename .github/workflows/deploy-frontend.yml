@@ -1,0 +1,41 @@
+name: frontend-ci
+
+on:
+  push:
+    # paths:
+    #   - front/**
+    branches:
+      - ci_workflow
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to azure container registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build front
+        working-directory: ./front
+        run: |
+          touch .env && echo ${{ secrets.VITE_API_URL }} > .env
+          npm run build
+
+      - name: Build and deploy front container
+        uses: docker/build-push-action@v5
+        with:
+          context: ./front
+          platforms: linux/amd64
+          push: true
+          tags: ${{ secrets.REGISTRY_LOGIN_SERVER }}/front:latest
