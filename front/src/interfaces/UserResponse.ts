@@ -1,6 +1,6 @@
-export default interface registerUser {
+export default interface UserResponse {
   data: {
-    register: {
+    response: {
       message: string
       user: {
         id: string

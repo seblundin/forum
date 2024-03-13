@@ -1,5 +1,5 @@
 import LoginResponse from '../interfaces/LoginResponse'
-import RegisterResponse from '../interfaces/RegisterResponse'
+import UserResponse from '../interfaces/UserResponse'
 
 const loginUser = async (vars: {
   credentials: { username: string; password: string }
@@ -69,7 +69,7 @@ const registerUser = async (vars: {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
 
-    const data: RegisterResponse = await response.json()
+    const data: UserResponse = await response.json()
     console.log(data)
     return data
   } catch (error) {
@@ -77,4 +77,74 @@ const registerUser = async (vars: {
   }
 }
 
-export { loginUser, registerUser }
+const updateUser = async (
+  vars: {
+    user: {
+      username: string
+      email: string
+      password: string
+    }
+  },
+  token: string
+) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/graphql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: `mutation Mutation($user: UserModify!) {
+          updateUser(user: $user) {
+            message
+            user {
+              id
+              username
+              email
+            }
+          }
+        }`,
+        variables: vars,
+      }),
+    })
+
+    const data: UserResponse = await response.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const deleteUser = async (token: string) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/graphql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: `mutation DeleteUser {
+          deleteUser {
+            message
+            user {
+              id
+              username
+              email
+            }
+          }
+        }`,
+      }),
+    })
+
+    const data: UserResponse = await response.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export { loginUser, registerUser, updateUser, deleteUser }

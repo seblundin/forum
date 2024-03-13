@@ -103,10 +103,25 @@ export const userPut = async (
     if (!user) {
       next(new CustomError('User data missing', 500));
     }
+    let result;
+    if (req.body.password) {
+      if (req.body.password.length < 5) {
+        return next(new CustomError('Invalid password length', 400));
+      }
+      const password = await hash(req.body.password, 12);
 
-    const result = await UserModel.findByIdAndUpdate(res.locals.user.id, user, {
-      returnDocument: 'after',
-    }).exec();
+      result = await UserModel.findByIdAndUpdate(
+        res.locals.user.id,
+        {...user, password},
+        {
+          returnDocument: 'after',
+        }
+      ).exec();
+    } else {
+      result = await UserModel.findByIdAndUpdate(res.locals.user.id, user, {
+        returnDocument: 'after',
+      }).exec();
+    }
     result
       ? res.json({message: 'User updated', user: result})
       : new CustomError('Error', 500);

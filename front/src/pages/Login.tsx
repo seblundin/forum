@@ -14,6 +14,7 @@ const Login = () => {
     placeholder: 'Enter your email',
   })
   const password = useInput({
+    type: 'password',
     placeholder: 'Enter your password',
   })
   const navigate = useNavigate()

@@ -43,9 +43,14 @@ const Home = () => {
             <ButtonBase color={ButtonColors.purple}>Login</ButtonBase>
           </Link>
         ) : (
-          <ButtonBase color={ButtonColors.purple} onClick={logout}>
-            Logout
-          </ButtonBase>
+          <div>
+            <ButtonBase color={ButtonColors.purple} onClick={logout}>
+              Logout
+            </ButtonBase>
+            <Link to="/settings">
+              <ButtonBase color={ButtonColors.blue}>Settings</ButtonBase>
+            </Link>
+          </div>
         )}
       </div>
       {userState ? (
