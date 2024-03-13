@@ -1,10 +1,11 @@
 import React, { createContext, useState, ReactNode, useContext } from 'react'
 import { Thread } from '../types/Types'
-import { createThread } from '../services/ThreadService'
+import { createThread, getThreads } from '../services/ThreadService'
 
 interface ThreadContextProps {
   threads: Thread[]
   addThread: (newThread: Thread, token: string) => Promise<void>
+  getAllThreads: (token: string) => Promise<void>
 }
 
 interface ThreadProviderProps {
@@ -30,7 +31,12 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = ({ children }) => {
     setThreadList((prevThreads) => [...prevThreads, thread])
   }
 
-  const contextValue: ThreadContextProps = { threads, addThread }
+  const getAllThreads = async (token: string) => {
+    const threads = await getThreads(token)
+    setThreadList(threads)
+  }
+
+  const contextValue: ThreadContextProps = { threads, addThread, getAllThreads }
 
   return (
     <ThreadContext.Provider value={contextValue}>

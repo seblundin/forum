@@ -38,4 +38,33 @@ const createThread = async (
     console.error(error)
   }
 }
-export { createThread }
+
+const getThreads = async (token: string) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/graphql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: `query Query {
+            threads {
+              id
+              title
+              content
+              uploadtime
+              mediacontent
+            }
+          }`,
+      }),
+    })
+
+    const data = await response.json()
+    console.log(data)
+    return data.data.threads
+  } catch (error) {
+    console.error(error)
+  }
+}
+export { createThread, getThreads }
