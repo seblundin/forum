@@ -28,11 +28,9 @@ jobs:
 
       - name: Build front
         working-directory: ./front
-        run: |
-          touch .env && echo ${{ secrets.VITE_API_URL }} > .env
-          cat .env
-          npm ci
-          npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: npm ci && npm run build
 
       - name: Build and deploy front container
         uses: docker/build-push-action@v5
