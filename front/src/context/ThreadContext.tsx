@@ -1,10 +1,14 @@
 import React, { createContext, useState, ReactNode, useContext } from 'react'
-import { Thread } from '../types/Types'
-import { createThread, getThreads } from '../services/ThreadService'
+import { Thread, ThreadInput } from '../types/Types'
+import {
+  createThread,
+  getComments,
+  getThreads,
+} from '../services/ThreadService'
 
 interface ThreadContextProps {
   threads: Thread[]
-  addThread: (newThread: Thread, token: string) => Promise<void>
+  addThread: (newThread: ThreadInput, token: string) => Promise<void>
   getAllThreads: (token: string) => Promise<void>
 }
 
@@ -26,14 +30,19 @@ export const useThreadContext = (): ThreadContextProps => {
 export const ThreadProvider: React.FC<ThreadProviderProps> = ({ children }) => {
   const [threads, setThreadList] = useState<Thread[]>([])
 
-  const addThread = async (newThread: Thread, token: string) => {
-    const thread = await createThread({ thread: newThread }, token)
+  const addThread = async (newThread: ThreadInput, token: string) => {
+    const thread: Thread = await createThread({ thread: newThread }, token)
     setThreadList((prevThreads) => [...prevThreads, thread])
   }
 
   const getAllThreads = async (token: string) => {
-    const threads = await getThreads(token)
-    setThreadList(threads)
+    const threads: Thread[] = (await getThreads(token))!
+    const comments: Thread[] = []
+    for (let i = 0; i < threads.length; i++) {
+      const result = await getComments(token, threads[i].id)
+      comments.push(...result!)
+    }
+    setThreadList([...threads, ...comments])
   }
 
   const contextValue: ThreadContextProps = { threads, addThread, getAllThreads }

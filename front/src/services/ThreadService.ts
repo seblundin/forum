@@ -1,3 +1,6 @@
+import CommentResponse from '../interfaces/CommentResponse'
+import ThreadResponse from '../interfaces/ThreadResponse'
+
 const createThread = async (
   vars: {
     thread: { title?: string; content: string }
@@ -20,8 +23,6 @@ const createThread = async (
               uploadtime
               mediacontent
               owner {
-                email
-                username
                 id
               }
               parent
@@ -55,16 +56,56 @@ const getThreads = async (token: string) => {
               content
               uploadtime
               mediacontent
+              owner {
+                id
+              }
+              parent
             }
           }`,
       }),
     })
 
-    const data = await response.json()
-    console.log(data)
-    return data.data.threads
+    const body: ThreadResponse = await response.json()
+    console.log(body)
+    return body.data.threads
   } catch (error) {
     console.error(error)
   }
 }
-export { createThread, getThreads }
+
+const getComments = async (token: string, threadId: string) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/graphql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: `query commentsByThread($threadId: ID!) {
+          commentsByThread(threadId: $threadId) {
+            id
+            title
+            content
+            uploadtime
+            mediacontent
+            owner {
+              id
+            }
+            parent
+          }
+        }`,
+        variables: {
+          threadId,
+        },
+      }),
+    })
+
+    const body: CommentResponse = await response.json()
+    console.log(body)
+    return body.data.commentsByThread
+  } catch (error) {
+    console.error(error)
+  }
+}
+export { createThread, getThreads, getComments }
