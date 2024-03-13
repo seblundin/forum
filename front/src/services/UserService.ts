@@ -77,4 +77,76 @@ const registerUser = async (vars: {
   }
 }
 
-export { loginUser, registerUser }
+//TODO
+const updateUser = async (
+  vars: {
+    user: {
+      username: string
+      email: string
+      password: string
+    }
+  },
+  token: string
+) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/graphql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: `mutation Mutation($user: UserModify!) {
+          updateUser(user: $user) {
+            message
+            user {
+              id
+              username
+              email
+            }
+          }
+        }`,
+        variables: vars,
+      }),
+    })
+
+    const data: RegisterResponse = await response.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+//TODO
+const deleteUser = async (token: string) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/graphql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: `mutation DeleteUser {
+          deleteUser {
+            message
+            user {
+              id
+              username
+              email
+            }
+          }
+        }`,
+      }),
+    })
+
+    const data: RegisterResponse = await response.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export { loginUser, registerUser, updateUser, deleteUser }

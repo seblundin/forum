@@ -5,7 +5,12 @@ import {
   useEffect,
   ReactNode,
 } from 'react'
-import { loginUser, registerUser } from '../services/UserService'
+import {
+  loginUser,
+  registerUser,
+  updateUser,
+  deleteUser,
+} from '../services/UserService'
 
 interface UserData {
   user: {
@@ -32,6 +37,8 @@ interface UserContextProps {
   login: (userData: LoginData) => Promise<string>
   logout: () => void
   register: (userData: RegisterData) => Promise<string>
+  userUpdate: (userData: RegisterData) => Promise<string>
+  userDelete: () => Promise<string>
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined)
@@ -95,7 +102,36 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return 'something went wrong'
   }
 
-  const contextValue: UserContextProps = { userState, login, logout, register }
+  //TODO
+  const userUpdate = async (userData: RegisterData) => {
+    const response = await updateUser({ user: userData }, userState!.token)
+    if (response) {
+      const { email, password } = userData
+      sessionStorage.removeItem('user')
+      await login({ username: email, password })
+      return 'ok'
+    }
+    return 'something went wrong'
+  }
+
+  //TODO
+  const userDelete = async () => {
+    const response = await deleteUser(userState!.token)
+    if (response) {
+      logout()
+      return 'ok'
+    }
+    return 'something went wrong'
+  }
+
+  const contextValue: UserContextProps = {
+    userState,
+    login,
+    logout,
+    register,
+    userUpdate,
+    userDelete,
+  }
 
   return (
     <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
