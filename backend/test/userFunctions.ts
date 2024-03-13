@@ -226,6 +226,7 @@ const putUser = (url: string | Application, token: string) => {
         },
       })
       .expect(200, (err, response) => {
+        console.log(response);
         if (err) {
           reject(err);
         } else {
