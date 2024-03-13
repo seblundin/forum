@@ -1,5 +1,5 @@
 import LoginResponse from '../interfaces/LoginResponse'
-import RegisterResponse from '../interfaces/RegisterResponse'
+import UserResponse from '../interfaces/UserResponse'
 
 const loginUser = async (vars: {
   credentials: { username: string; password: string }
@@ -69,7 +69,7 @@ const registerUser = async (vars: {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
 
-    const data: RegisterResponse = await response.json()
+    const data: UserResponse = await response.json()
     console.log(data)
     return data
   } catch (error) {
@@ -109,7 +109,7 @@ const updateUser = async (
       }),
     })
 
-    const data: RegisterResponse = await response.json()
+    const data: UserResponse = await response.json()
     console.log(data)
     return data
   } catch (error) {
@@ -139,7 +139,7 @@ const deleteUser = async (token: string) => {
       }),
     })
 
-    const data: RegisterResponse = await response.json()
+    const data: UserResponse = await response.json()
     console.log(data)
     return data
   } catch (error) {

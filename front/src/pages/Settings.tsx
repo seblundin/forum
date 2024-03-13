@@ -9,19 +9,19 @@ const Settings = () => {
   const { userUpdate, userDelete, userState } = useUser()
   const username = useInput(
     {
-      id: 'usernameRegister',
+      id: 'username',
       placeholder: 'Enter your username',
     },
     userState?.user.username
   )
   const password = useInput({
-    id: 'passwordRegister',
+    id: 'password',
     type: 'password',
     placeholder: 'Enter your password',
   })
   const confirmPassword = useInput({
-    type: 'password',
     id: 'confirmPassword',
+    type: 'password',
     placeholder: 'Confirm your password',
   })
   const email = useInput(
@@ -34,6 +34,7 @@ const Settings = () => {
   )
   const navigate = useNavigate()
 
+  //TODO Errorhandling
   const handleSubmit = async () => {
     if (password.value !== confirmPassword.value) {
       console.error('Passwords do not match')
@@ -57,7 +58,7 @@ const Settings = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
-            htmlFor="usernameRegister"
+            htmlFor="username"
             className="block text-gray-600 text-sm font-semibold mb-2"
           >
             Username
