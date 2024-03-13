@@ -2,10 +2,10 @@ name: frontend-ci
 
 on:
   push:
-    # paths:
-    #   - front/**
+    paths:
+      - front/**
     branches:
-      - ci_workflow
+      - main
 
 jobs:
   deploy-frontend:
