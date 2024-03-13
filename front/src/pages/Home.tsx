@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import CreateThread from '../components/CreateThread'
 import ThreadComponent from '../components/ThreadComponent'
@@ -8,9 +8,16 @@ import ButtonColors from '../enums/ButtonColors'
 import { useUser } from '../context/UserContext'
 
 const Home = () => {
-  const { threads, addThread } = useThreadContext()
+  const { threads, addThread, getAllThreads } = useThreadContext()
   const [showCreateThreadBox, setShowCreateThreadBox] = useState(false)
   const { userState, logout } = useUser()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getAllThreads(userState!.token)
+    }
+    fetchData()
+  }, [userState?.token])
 
   const handleCreateThread = () => {
     setShowCreateThreadBox(true)
@@ -18,14 +25,12 @@ const Home = () => {
 
   const handleCreateThreadSubmit = (title: string, content: string) => {
     const newThread = {
-      id: Date.now().toString(),
-      user: userState!.user.id,
       title,
       content,
       uploadtime: new Date(),
     }
 
-    addThread(newThread)
+    addThread(newThread, userState!.token)
     setShowCreateThreadBox(false)
   }
 
