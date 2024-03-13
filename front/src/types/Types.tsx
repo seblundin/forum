@@ -1,10 +1,22 @@
 type Thread = {
-  id?: string
+  id: string
   title?: string
-  user?: string
   content: string
-  parent?: Thread
   uploadtime: Date
+  mediacontent: string
+  owner: {
+    id: string
+    email?: string
+    username?: string
+  }
+  parent: string
 }
 
-export type { Thread }
+type ThreadInput = {
+  title?: string
+  content: string
+  uploadtime: Date
+  parent?: string
+}
+
+export type { Thread, ThreadInput }

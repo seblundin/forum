@@ -14,7 +14,9 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await getAllThreads(userState!.token)
+      if (userState && userState.token) {
+        await getAllThreads(userState!.token)
+      }
     }
     fetchData()
   }, [userState?.token])

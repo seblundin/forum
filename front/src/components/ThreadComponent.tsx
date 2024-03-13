@@ -11,7 +11,7 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
   const { userState } = useUser()
 
   const { threads, addThread } = useThreadContext()
-  const children = threads.filter((th) => th.parent?.id === thread.id)
+  const children = threads.filter((th) => th.parent === thread.id)
 
   const handleButtonClick = () => {
     setShowReplyBoxForReply((oldState) => !oldState)
@@ -20,27 +20,25 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
     <div className="bg-white p-6 rounded-lg shadow-md w-full" key={thread.id}>
       <p className="text-2xl font-sans mb-2 text-black">{thread.title}</p>
       <p className="text-l font-sans mb-2 text-black">
-        User:&nbsp;{thread.user}
+        User:&nbsp;{thread.owner?.id}
       </p>
       <div className="text-black">
         <p>{thread.content}</p>
       </div>
       {children.map((child) => (
-        <ThreadComponent thread={child}></ThreadComponent>
+        <ThreadComponent thread={child} key={child.id}></ThreadComponent>
       ))}
       <div className="mt-4 space-y-2">
         <ButtonBase onClick={handleButtonClick}>Reply</ButtonBase>
         {showReplyBoxForReply && (
           <Reply
-            onSubmit={(replyText: string) => {
+            onSubmit={async (replyText: string) => {
               const newThread = {
-                id: Date.now().toString(),
-                user: userState!.user.id,
                 content: replyText,
-                parent: thread,
+                parent: thread.id,
                 uploadtime: new Date(),
               }
-              addThread(newThread)
+              await addThread(newThread, userState!.token)
               handleButtonClick()
             }}
           />
