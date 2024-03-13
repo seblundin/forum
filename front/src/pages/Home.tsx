@@ -18,14 +18,12 @@ const Home = () => {
 
   const handleCreateThreadSubmit = (title: string, content: string) => {
     const newThread = {
-      id: Date.now().toString(),
-      user: userState!.user.id,
       title,
       content,
       uploadtime: new Date(),
     }
 
-    addThread(newThread)
+    addThread(newThread, userState!.token)
     setShowCreateThreadBox(false)
   }
 

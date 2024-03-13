@@ -1,7 +1,7 @@
 type Thread = {
-  id: string
+  id?: string
   title?: string
-  user: string
+  user?: string
   content: string
   parent?: Thread
   uploadtime: Date
