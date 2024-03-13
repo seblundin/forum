@@ -1,5 +1,5 @@
 import {MyContext} from '../../interfaces/MyContext';
-import {ThreadInput} from '../../interfaces/Thread';
+import {Thread, ThreadInput} from '../../interfaces/Thread';
 import threadModel from '../models/threadModel';
 
 export default {
@@ -27,7 +27,29 @@ export default {
     },
     commentsByThread: async (_parent: undefined, args: {threadId: string}) => {
       try {
-        return await threadModel.find({parent: args.threadId});
+        const findThreadsWithChildren = async (threadId: string) => {
+          // Find direct children of the given threadId
+          const children = await threadModel.find({parent: threadId});
+
+          // If no children found, return an empty array
+          if (children.length === 0) {
+            return [];
+          }
+
+          const threadsLinkedToParent: Thread[] = [];
+
+          // Iterate through each child and recursively find their children
+          for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            const grandchildren = await findThreadsWithChildren(child._id);
+
+            // Add current child and its grandchildren to the result array
+            threadsLinkedToParent.push(child, ...grandchildren);
+          }
+
+          return threadsLinkedToParent;
+        };
+        return await findThreadsWithChildren(args.threadId);
       } catch (error) {
         console.log(error);
       }
