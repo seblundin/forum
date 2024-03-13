@@ -102,7 +102,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return 'something went wrong'
   }
 
-  //TODO
   const userUpdate = async (userData: RegisterData) => {
     const response = await updateUser({ user: userData }, userState!.token)
     if (response) {
@@ -114,7 +113,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return 'something went wrong'
   }
 
-  //TODO
   const userDelete = async () => {
     const response = await deleteUser(userState!.token)
     if (response) {

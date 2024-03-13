@@ -77,7 +77,6 @@ const registerUser = async (vars: {
   }
 }
 
-//TODO
 const updateUser = async (
   vars: {
     user: {
@@ -118,7 +117,6 @@ const updateUser = async (
   }
 }
 
-//TODO
 const deleteUser = async (token: string) => {
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/graphql`, {
