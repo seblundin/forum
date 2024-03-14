@@ -25,3 +25,4 @@ Project for course Web-sovelluskehitys 2.
 2. You can now view and browse all threads.
 3. Hit "Create thread" to make a new thread.
 4. Use "Reply"-button in any post to reply it.
+5. To delete user or edit your username, email or password, navigate to Settings-page.
