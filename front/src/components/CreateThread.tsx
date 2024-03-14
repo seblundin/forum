@@ -14,6 +14,8 @@ const CreateThread = ({
   const threadTitle = useInput({
     placeholder: 'Thread Title',
     className: 'w-full p-2 mb-2',
+    required: true,
+    maxLength: '100',
   })
 
   const handleContentChange = (
@@ -37,6 +39,8 @@ const CreateThread = ({
         value={threadContent}
         onChange={handleContentChange}
         className="w-full p-2 mb-2"
+        minLength={1}
+        maxLength={500}
       />
       <ButtonBase color={ButtonColors.blue} onClick={handleSubmit}>
         Create Thread
