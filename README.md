@@ -1,6 +1,6 @@
 # Forum
 
-Message board targetted to internet users looking for text based conversation on various topics. Requires registration to view and participate in threads.
+Message board targeted to internet users looking for text based conversation on various topics. Requires registration to view and participate in threads.
 
 Project for course Web-sovelluskehitys 2.
 
