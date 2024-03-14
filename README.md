@@ -9,7 +9,7 @@ Project for course Web-sovelluskehitys 2.
 - Post Creation: Users can create new text-based posts to start discussions on various topics.
 - Reply Functionality: Users can reply to existing posts, adding their input to ongoing discussions.
 - User Authentication: User authentication ensures that only registered users can create posts and replies.
-- User Profiles: Each user has a profile page containing a username, email and password edit form
+- User Profiles: Each user has a profile page containing a username, email and password edit form.
 
 ## Technologies
 
