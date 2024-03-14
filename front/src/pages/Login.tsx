@@ -9,6 +9,7 @@ import { useUser } from '../context/UserContext'
 
 const Login = () => {
   const [showRegister, setShowRegister] = useState(false)
+  const [loggingIn, setLoggingIn] = useState(false)
   const { login } = useUser()
 
   const username = useInput({
@@ -30,6 +31,7 @@ const Login = () => {
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setLoggingIn(true)
     const result = await login({
       username: username.value,
       password: password.value,
@@ -39,6 +41,7 @@ const Login = () => {
       return
     }
     window.alert(result)
+    setLoggingIn(false)
   }
 
   const handleRegisterClick = () => {
@@ -69,7 +72,10 @@ const Login = () => {
             <InputBase props={password} />
           </div>
 
-          <ButtonBase color={ButtonColors.blue} props={{ type: 'submit' }}>
+          <ButtonBase
+            color={ButtonColors.blue}
+            props={{ type: 'submit', disabled: loggingIn }}
+          >
             Login
           </ButtonBase>
 

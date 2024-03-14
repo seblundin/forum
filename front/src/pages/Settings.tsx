@@ -4,9 +4,11 @@ import useInput from '../hooks/useInput'
 import ButtonBase from '../components/ButtonBase'
 import ButtonColors from '../enums/ButtonColors'
 import { useUser } from '../context/UserContext'
+import { useState } from 'react'
 
 const Settings = () => {
   const { userUpdate, userDelete, userState } = useUser()
+  const [isUpdating, setIsUpdating] = useState(false)
   const username = useInput(
     {
       id: 'username',
@@ -36,9 +38,9 @@ const Settings = () => {
   )
   const navigate = useNavigate()
 
-  //TODO Errorhandling
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setIsUpdating(true)
     if (password.value !== confirmPassword.value) {
       console.error('Passwords do not match')
       return
@@ -61,15 +63,18 @@ const Settings = () => {
     } else {
       window.alert(result)
     }
+    setIsUpdating(false)
   }
 
   const handleDelete = async () => {
+    setIsUpdating(true)
     const result = await userDelete()
     if (result === 'ok') {
       navigate('/')
     } else {
       window.alert(result)
     }
+    setIsUpdating(false)
   }
 
   return (
@@ -112,10 +117,16 @@ const Settings = () => {
           </label>
           <InputBase props={confirmPassword} />
         </div>
-        <ButtonBase props={{ type: 'submit' }}>Update</ButtonBase>
+        <ButtonBase props={{ type: 'submit', disabled: isUpdating }}>
+          Update
+        </ButtonBase>
       </form>
       <div>
-        <ButtonBase color={ButtonColors.purple} onClick={handleDelete}>
+        <ButtonBase
+          color={ButtonColors.purple}
+          onClick={handleDelete}
+          props={{ disabled: isUpdating }}
+        >
           Delete user
         </ButtonBase>
       </div>
