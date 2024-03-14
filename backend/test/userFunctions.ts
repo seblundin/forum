@@ -278,6 +278,43 @@ const deleteUser = (
           reject(err);
         } else {
           const userData = response.body.data.deleteUser;
+          expect(userData.user.username).toBe('DELETED');
+          expect(userData.user.email).toBe('DELETED');
+          resolve(userData);
+        }
+      });
+  });
+};
+
+const deleteUserById = (
+  url: string | Application,
+  id: string,
+  token: string
+): Promise<UserResponse> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post('/graphql')
+      .set('Authorization', 'Bearer ' + token)
+      .send({
+        query: `mutation DeleteUserById($deleteUserById: ID!) {
+          deleteUserById(id: $deleteUserById) {
+            message
+            user {
+              id
+              username
+              email
+            }
+          }
+        }`,
+        variables: {
+          deleteUserById: id,
+        },
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const userData = response.body.data.deleteUserById;
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
           resolve(userData);
@@ -286,4 +323,12 @@ const deleteUser = (
   });
 };
 
-export {getUser, getSingleUser, postUser, loginUser, putUser, deleteUser};
+export {
+  getUser,
+  getSingleUser,
+  postUser,
+  loginUser,
+  putUser,
+  deleteUser,
+  deleteUserById,
+};

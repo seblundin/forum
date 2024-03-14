@@ -124,5 +124,18 @@ export default {
       });
       return result;
     },
+    deleteUserById: async (
+      _parent: undefined,
+      args: {id: string},
+      context: MyContext
+    ) => {
+      return await fetchData<UserResponse>(
+        `${process.env.AUTH_URL}/users/${args.id}`,
+        {
+          method: 'DELETE',
+          headers: {Authorization: `Bearer ${context.userdata?.token}`},
+        }
+      );
+    },
   },
 };

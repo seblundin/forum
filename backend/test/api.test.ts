@@ -1,6 +1,7 @@
 import app from '../src/app';
 import {
   deleteUser,
+  deleteUserById,
   getSingleUser,
   getUser,
   loginUser,
@@ -192,9 +193,17 @@ describe('Testing graphql api', () => {
   it('should delete a thread', async () => {
     await deleteThread(app, threadId1, userData.token!);
   });
-
-  // test delete user based on token
-  it('should delete current user', async () => {
+  // test "delete" user based on token
+  it('should "delete" current user', async () => {
     await deleteUser(app, userData.token!);
+  });
+  // test delete user based on id
+  it('should delete user by id', async () => {
+    await deleteUserById(app, userData.user.id, userData.token!);
+  });
+
+  // test delete another user based on id
+  it('should delete another user by id', async () => {
+    await deleteUserById(app, userData2.user.id, userData2.token!);
   });
 });
