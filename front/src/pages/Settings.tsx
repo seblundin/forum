@@ -11,6 +11,7 @@ const Settings = () => {
     {
       id: 'username',
       placeholder: 'Enter your username',
+      required: true,
     },
     userState?.user.username
   )
@@ -29,27 +30,46 @@ const Settings = () => {
       id: 'email',
       type: 'email',
       placeholder: 'Enter your email',
+      required: true,
     },
     userState?.user.email
   )
   const navigate = useNavigate()
 
   //TODO Errorhandling
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault()
     if (password.value !== confirmPassword.value) {
       console.error('Passwords do not match')
       return
     }
-    await userUpdate({
-      username: username.value,
-      password: password.value,
-      email: email.value,
-    })
+    let result
+    if (password.value === '') {
+      result = await userUpdate({
+        username: username.value,
+        email: email.value,
+      })
+    } else {
+      result = await userUpdate({
+        username: username.value,
+        password: password.value,
+        email: email.value,
+      })
+    }
+    if (result === 'ok') {
+      navigate('/')
+    } else {
+      window.alert(result)
+    }
   }
 
   const handleDelete = async () => {
-    await userDelete()
-    navigate('/')
+    const result = await userDelete()
+    if (result === 'ok') {
+      navigate('/')
+    } else {
+      window.alert(result)
+    }
   }
 
   return (

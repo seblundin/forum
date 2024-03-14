@@ -32,12 +32,18 @@ interface RegisterData {
   email: string
 }
 
+interface UpdateData {
+  username?: string
+  password?: string
+  email?: string
+}
+
 interface UserContextProps {
   userState: UserData | null
   login: (userData: LoginData) => Promise<string>
   logout: () => void
   register: (userData: RegisterData) => Promise<string>
-  userUpdate: (userData: RegisterData) => Promise<string>
+  userUpdate: (userData: UpdateData) => Promise<string>
   userDelete: () => Promise<string>
 }
 
@@ -102,12 +108,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return 'something went wrong'
   }
 
-  const userUpdate = async (userData: RegisterData) => {
+  const userUpdate = async (userData: UpdateData) => {
     const response = await updateUser({ user: userData }, userState!.token)
     if (response) {
-      const { email, password } = userData
-      sessionStorage.removeItem('user')
-      await login({ username: email, password })
+      logout()
       return 'ok'
     }
     return 'something went wrong'
