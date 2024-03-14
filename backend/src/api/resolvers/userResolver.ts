@@ -95,10 +95,12 @@ export default {
       const threadData: ThreadInput = {
         title: 'DELETED',
         content: 'DELETED',
+        mediacontent: '',
         uploadtime: new Date(),
       };
       const commentData: ThreadInput = {
         content: 'DELETED',
+        mediacontent: '',
         uploadtime: new Date(),
       };
 
@@ -121,6 +123,19 @@ export default {
         }
       });
       return result;
+    },
+    deleteUserById: async (
+      _parent: undefined,
+      args: {id: string},
+      context: MyContext
+    ) => {
+      return await fetchData<UserResponse>(
+        `${process.env.AUTH_URL}/users/${args.id}`,
+        {
+          method: 'DELETE',
+          headers: {Authorization: `Bearer ${context.userdata?.token}`},
+        }
+      );
     },
   },
 };

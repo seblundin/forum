@@ -144,7 +144,6 @@ const putThread = (
           reject(err);
         } else {
           const thread = vars.thread;
-          console.error(response.body, 'THREAD', thread);
           const updatedThread = response.body.data.updateThread;
           expect(updatedThread).toHaveProperty('id');
           expect(updatedThread.title).toBe(oldThread.title);

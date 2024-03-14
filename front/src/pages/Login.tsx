@@ -45,7 +45,7 @@ const Login = () => {
   }
 
   const handleRegisterClick = () => {
-    setShowRegister(true)
+    setShowRegister((oldState) => !oldState)
   }
 
   return (
