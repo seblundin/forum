@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useUser } from '../context/UserContext'
 import useInput from '../hooks/useInput'
 import ButtonBase from './ButtonBase'
@@ -34,11 +35,13 @@ const Register = () => {
     required: true,
     autoComplete: 'email',
   })
+  const [isRegistering, setIsRegistering] = useState(false)
   const { register } = useUser()
   const navigate = useNavigate()
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setIsRegistering(true)
 
     if (password.value !== confirmPassword.value) {
       window.alert('Passwords do not match')
@@ -54,6 +57,7 @@ const Register = () => {
       return
     }
     window.alert(result)
+    setIsRegistering(false)
   }
 
   return (
@@ -96,7 +100,9 @@ const Register = () => {
           </label>
           <InputBase props={confirmPassword} />
         </div>
-        <ButtonBase props={{ type: 'submit' }}>Register</ButtonBase>
+        <ButtonBase props={{ type: 'submit', disabled: isRegistering }}>
+          Register
+        </ButtonBase>
       </form>
     </div>
   )

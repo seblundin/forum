@@ -2,7 +2,7 @@ import ButtonColors from '../enums/ButtonColors'
 
 interface Props {
   color?: ButtonColors
-  props?: { [name: string]: string }
+  props?: { [name: string]: string | boolean }
   onClick?: () => void
   children: React.ReactNode
 }
