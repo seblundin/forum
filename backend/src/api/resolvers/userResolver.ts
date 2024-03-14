@@ -4,7 +4,8 @@ import fetchData from '../../functions/fetchData';
 import UserResponse from '../../interfaces/UserResponse';
 import {LoginResponse} from '../../interfaces/MessageInterfaces';
 import {MyContext} from '../../interfaces/MyContext';
-import {Thread} from '../../interfaces/Thread';
+import {Thread, ThreadInput} from '../../interfaces/Thread';
+import threadResolver from './threadResolver';
 
 export default {
   Thread: {
@@ -66,13 +67,60 @@ export default {
       });
     },
     deleteUser: async (_parent: undefined, _: {}, context: MyContext) => {
-      return await fetchData<UserResponse>(
+      /*const result = await fetchData<UserResponse>(
         `${process.env.AUTH_URL}/users/${context.userdata?.user.id}`,
         {
           method: 'DELETE',
           headers: {Authorization: `Bearer ${context.userdata?.token}`},
         }
+      );*/
+
+      const deletedUser: UserInput = {
+        username: 'DELETED',
+        email: 'DELETED',
+        password: '',
+      };
+      const result = await fetchData<UserResponse>(
+        `${process.env.AUTH_URL}/users`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${context.userdata?.token}`,
+          },
+          body: JSON.stringify(deletedUser),
+        }
       );
+
+      const threadData: ThreadInput = {
+        title: 'DELETED',
+        content: 'DELETED',
+        uploadtime: new Date(),
+      };
+      const commentData: ThreadInput = {
+        content: 'DELETED',
+        uploadtime: new Date(),
+      };
+
+      const threads = await threadResolver.Query.threadsByOwner(undefined, {
+        ownerId: context.userdata!.user.id,
+      });
+      threads?.forEach(async (thread) => {
+        if (thread.parent === undefined) {
+          await threadResolver.Mutation.updateThread(
+            undefined,
+            {id: thread.id, thread: threadData},
+            context
+          );
+        } else {
+          await threadResolver.Mutation.updateThread(
+            undefined,
+            {id: thread.id, thread: commentData},
+            context
+          );
+        }
+      });
+      return result;
     },
   },
 };
