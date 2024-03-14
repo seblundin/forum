@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 
 const useInput = (
-  properties?: { [name: string]: string },
+  properties?: { [name: string]: string | boolean },
   defaultValue: string = '',
   type: string = 'text'
 ) => {
@@ -15,6 +15,7 @@ const useInput = (
     type,
     value,
     onChange,
+    maxLength: '50',
     ...properties,
   }
 }
