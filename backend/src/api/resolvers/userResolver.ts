@@ -95,10 +95,12 @@ export default {
       const threadData: ThreadInput = {
         title: 'DELETED',
         content: 'DELETED',
+        mediacontent: '',
         uploadtime: new Date(),
       };
       const commentData: ThreadInput = {
         content: 'DELETED',
+        mediacontent: '',
         uploadtime: new Date(),
       };
 

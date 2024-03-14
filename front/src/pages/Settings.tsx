@@ -43,6 +43,7 @@ const Settings = () => {
     setIsUpdating(true)
     if (password.value !== confirmPassword.value) {
       console.error('Passwords do not match')
+      setIsUpdating(false)
       return
     }
     let result
@@ -67,14 +68,16 @@ const Settings = () => {
   }
 
   const handleDelete = async () => {
-    setIsUpdating(true)
-    const result = await userDelete()
-    if (result === 'ok') {
-      navigate('/')
-    } else {
-      window.alert(result)
+    if (window.confirm('Do you really want to delete user?')) {
+      setIsUpdating(true)
+      const result = await userDelete()
+      if (result === 'ok') {
+        navigate('/')
+      } else {
+        window.alert(result)
+      }
+      setIsUpdating(false)
     }
-    setIsUpdating(false)
   }
 
   return (

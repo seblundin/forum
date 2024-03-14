@@ -45,6 +45,7 @@ const Register = () => {
 
     if (password.value !== confirmPassword.value) {
       window.alert('Passwords do not match')
+      setIsRegistering(false)
       return
     }
     const result = await register({
@@ -54,6 +55,7 @@ const Register = () => {
     })
     if (result === 'ok') {
       navigate('/')
+      setIsRegistering(false)
       return
     }
     window.alert(result)
