@@ -7,7 +7,7 @@ import ButtonColors from '../enums/ButtonColors'
 const CreateThread = ({
   onSubmit,
 }: {
-  onSubmit: (title: string, content: string) => void
+  onSubmit: (title: string, content: string, mediacontent: string) => void
 }) => {
   const [threadContent, setThreadContent] = useState('')
 
@@ -17,6 +17,10 @@ const CreateThread = ({
     required: true,
     maxLength: '100',
   })
+  const media = useInput({
+    placeholder: 'Link to image...',
+    maxLength: '500',
+  })
 
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -25,7 +29,7 @@ const CreateThread = ({
   }
 
   const handleSubmit = () => {
-    onSubmit(threadTitle.value, threadContent)
+    onSubmit(threadTitle.value, threadContent, media.value)
     threadTitle.onChange()
     setThreadContent('')
   }
@@ -42,6 +46,10 @@ const CreateThread = ({
         minLength={1}
         maxLength={500}
       />
+      <InputBase props={media} />
+      {media.value && (
+        <img src={media.value} className="w-auto h-36 my-2"></img>
+      )}
       <ButtonBase color={ButtonColors.blue} onClick={handleSubmit}>
         Create Thread
       </ButtonBase>
