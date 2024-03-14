@@ -1,6 +1,8 @@
 # Forum
 
-Message board for text based conversation with logged in users. Project for course Web-sovelluskehitys 2.
+Message board targetted to internet users looking for text based conversation on various topics. Requires registeration to view and participate in threads.
+
+Project for course Web-sovelluskehitys 2.
 
 ## Features
 
@@ -16,3 +18,10 @@ Message board for text based conversation with logged in users. Project for cour
 - Database: MongoDB
 - Authentication: JSON Web Tokens (JWT)
 - Deployment: Docker, Azure
+
+## How to use
+
+1. Click "Login" and navigate to "Register"-form. Fill in required information (password must be at least 6 characters).
+2. You can now view and browse all threads.
+3. Hit "Create thread" to make a new thread.
+4. Use "Reply"-button in any post to reply it.
