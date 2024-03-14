@@ -80,9 +80,9 @@ const registerUser = async (vars: {
 const updateUser = async (
   vars: {
     user: {
-      username: string
-      email: string
-      password: string
+      username?: string
+      email?: string
+      password?: string
     }
   },
   token: string
