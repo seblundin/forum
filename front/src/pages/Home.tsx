@@ -22,7 +22,7 @@ const Home = () => {
   }, [userState?.token])
 
   const handleCreateThread = () => {
-    setShowCreateThreadBox(true)
+    setShowCreateThreadBox((oldState) => !oldState)
   }
 
   const handleCreateThreadSubmit = (title: string, content: string) => {
@@ -59,7 +59,7 @@ const Home = () => {
         <main className="mt-16 bg-pink-100 text-white p-8 rounded-lg max-w-5xl mx-auto">
           <div>
             <ButtonBase color={ButtonColors.blue} onClick={handleCreateThread}>
-              Create Thread
+              {showCreateThreadBox ? 'Close' : 'Create thread'}
             </ButtonBase>
             {showCreateThreadBox && (
               <CreateThread onSubmit={handleCreateThreadSubmit} />

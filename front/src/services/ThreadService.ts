@@ -23,7 +23,7 @@ const createThread = async (
               uploadtime
               mediacontent
               owner {
-                id
+                username
               }
               parent
             }
@@ -57,7 +57,7 @@ const getThreads = async (token: string) => {
               uploadtime
               mediacontent
               owner {
-                id
+                username
               }
               parent
             }
@@ -90,7 +90,7 @@ const getComments = async (token: string, threadId: string) => {
             uploadtime
             mediacontent
             owner {
-              id
+              username
             }
             parent
           }

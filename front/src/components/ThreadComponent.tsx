@@ -20,7 +20,7 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
     <div className="bg-white p-6 rounded-lg shadow-md w-full" key={thread.id}>
       <p className="text-2xl font-sans mb-2 text-black">{thread.title}</p>
       <p className="text-l font-sans mb-2 text-black">
-        User:&nbsp;{thread.owner?.id}
+        User:&nbsp;{thread.owner?.username}
       </p>
       <div className="text-black">
         <p>{thread.content}</p>
@@ -29,7 +29,9 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
         <ThreadComponent thread={child} key={child.id}></ThreadComponent>
       ))}
       <div className="mt-4 space-y-2">
-        <ButtonBase onClick={handleButtonClick}>Reply</ButtonBase>
+        <ButtonBase onClick={handleButtonClick}>
+          {showReplyBoxForReply ? 'Close' : 'Reply'}
+        </ButtonBase>
         {showReplyBoxForReply && (
           <Reply
             onSubmit={async (replyText: string) => {
