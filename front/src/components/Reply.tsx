@@ -27,6 +27,8 @@ const Reply = ({ onSubmit }: { onSubmit: (comment: string) => void }) => {
           rows={3}
           className="w-full p-2 text-black"
           value={replyText}
+          minLength={1}
+          maxLength={500}
           onChange={handleTextareaChange}
         />
         <ButtonBase color={ButtonColors.blue} onClick={handleSubmitReply}>
