@@ -58,6 +58,8 @@ const Settings = () => {
     }
     if (result === 'ok') {
       navigate('/')
+    } else {
+      window.alert(result)
     }
   }
 
@@ -65,6 +67,8 @@ const Settings = () => {
     const result = await userDelete()
     if (result === 'ok') {
       navigate('/')
+    } else {
+      window.alert(result)
     }
   }
 
