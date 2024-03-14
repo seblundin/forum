@@ -25,10 +25,15 @@ const Home = () => {
     setShowCreateThreadBox((oldState) => !oldState)
   }
 
-  const handleCreateThreadSubmit = (title: string, content: string) => {
+  const handleCreateThreadSubmit = (
+    title: string,
+    content: string,
+    mediacontent: string
+  ) => {
     const newThread = {
       title,
       content,
+      mediacontent,
       uploadtime: new Date(),
     }
 
@@ -65,7 +70,7 @@ const Home = () => {
               <CreateThread onSubmit={handleCreateThreadSubmit} />
             )}
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 break-words">
             {threads
               .sort((a, b) => (b.uploadtime >= a.uploadtime ? 1 : -1))
               .map(

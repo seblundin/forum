@@ -17,7 +17,7 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
     setShowReplyBoxForReply((oldState) => !oldState)
   }
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full" key={thread.id}>
+    <div className="flex-col bg-white p-6 rounded-lg shadow-md" key={thread.id}>
       <p className="text-2xl font-sans mb-2 text-black">{thread.title}</p>
       <div className="text-black">
         <p>{thread.content}</p>
@@ -31,7 +31,7 @@ const ThreadComponent = ({ thread }: { thread: Thread }): JSX.Element => {
       {children.map((child) => (
         <ThreadComponent thread={child} key={child.id}></ThreadComponent>
       ))}
-      <div className="mt-4 space-y-2 flex-wrap">
+      <div className="mt-4 space-y-2">
         <ButtonBase onClick={handleButtonClick}>
           {showReplyBoxForReply ? 'Close' : 'Reply'}
         </ButtonBase>
