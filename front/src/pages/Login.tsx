@@ -10,19 +10,35 @@ import { useUser } from '../context/UserContext'
 const Login = () => {
   const [showRegister, setShowRegister] = useState(false)
   const { login } = useUser()
+
   const username = useInput({
+    id: 'username',
     placeholder: 'Enter your email',
+    required: true,
+    autoComplete: 'email',
   })
   const password = useInput({
+    id: 'password',
     type: 'password',
     placeholder: 'Enter your password',
+    required: true,
+    autoComplete: 'current-password',
+    minLength: '6',
   })
+
   const navigate = useNavigate()
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await login({ username: username.value, password: password.value })
-    navigate('/')
+    const result = await login({
+      username: username.value,
+      password: password.value,
+    })
+    if (result === 'ok') {
+      navigate('/')
+      return
+    }
+    window.alert(result)
   }
 
   const handleRegisterClick = () => {

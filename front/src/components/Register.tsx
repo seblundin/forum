@@ -8,21 +8,31 @@ const Register = () => {
   const username = useInput({
     id: 'usernameRegister',
     placeholder: 'Enter your username',
+    required: true,
+    autoComplete: 'username',
   })
   const password = useInput({
     id: 'passwordRegister',
     type: 'password',
     placeholder: 'Enter your password',
+    required: true,
+    autoComplete: 'new-password',
+    minLength: '6',
   })
   const confirmPassword = useInput({
     type: 'password',
     id: 'confirmPassword',
     placeholder: 'Confirm your password',
+    required: true,
+    autoComplete: 'new-password',
+    minLength: '6',
   })
   const email = useInput({
     id: 'email',
     type: 'email',
     placeholder: 'Enter your email',
+    required: true,
+    autoComplete: 'email',
   })
   const { register } = useUser()
   const navigate = useNavigate()
@@ -31,15 +41,19 @@ const Register = () => {
     event.preventDefault()
 
     if (password.value !== confirmPassword.value) {
-      console.error('Passwords do not match')
+      window.alert('Passwords do not match')
       return
     }
-    await register({
+    const result = await register({
       username: username.value,
       password: password.value,
       email: email.value,
     })
-    navigate('/')
+    if (result === 'ok') {
+      navigate('/')
+      return
+    }
+    window.alert(result)
   }
 
   return (

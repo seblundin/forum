@@ -75,11 +75,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, [])
 
   const login = async (userData: LoginData) => {
-    const response = (await loginUser({ credentials: userData }))?.data.login
+    const response = await loginUser({ credentials: userData })
     if (response) {
-      const user = response.user
+      const loginData = response.data.login
+      const user = loginData.user
       const data = {
-        token: response.token,
+        token: loginData.token,
         user,
       }
       setUser(data)
@@ -105,7 +106,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       await login({ username: email, password })
       return 'ok'
     }
-    return 'something went wrong'
+    return 'something went wrong, please try again later'
   }
 
   const userUpdate = async (userData: UpdateData) => {
@@ -114,7 +115,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       logout()
       return 'ok'
     }
-    return 'something went wrong'
+    return 'something went wrong, please try again later'
   }
 
   const userDelete = async () => {
@@ -123,7 +124,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       logout()
       return 'ok'
     }
-    return 'something went wrong'
+    return 'something went wrong, please try again later'
   }
 
   const contextValue: UserContextProps = {

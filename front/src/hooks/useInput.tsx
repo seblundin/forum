@@ -15,6 +15,7 @@ const useInput = (
     type,
     value,
     onChange,
+    maxLength: '50',
     ...properties,
   }
 }
