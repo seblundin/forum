@@ -109,6 +109,10 @@ const updateUser = async (
       }),
     })
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
     const data: UserResponse = await response.json()
     console.log(data)
     return data
@@ -138,6 +142,10 @@ const deleteUser = async (token: string) => {
         }`,
       }),
     })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
 
     const data: UserResponse = await response.json()
     console.log(data)

@@ -106,7 +106,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       await login({ username: email, password })
       return 'ok'
     }
-    return 'something went wrong, please try again later'
+    return 'email already in use'
   }
 
   const userUpdate = async (userData: UpdateData) => {
