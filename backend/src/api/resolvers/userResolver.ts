@@ -6,6 +6,7 @@ import {LoginResponse} from '../../interfaces/MessageInterfaces';
 import {MyContext} from '../../interfaces/MyContext';
 import {Thread, ThreadInput} from '../../interfaces/Thread';
 import threadResolver from './threadResolver';
+import randomstring from 'randomstring';
 
 export default {
   Thread: {
@@ -77,7 +78,7 @@ export default {
 
       const deletedUser: UserInput = {
         username: 'DELETED',
-        email: 'DELETED',
+        email: 'DELETED' + randomstring.generate(10),
         password: '',
       };
       const result = await fetchData<UserResponse>(

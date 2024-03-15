@@ -279,7 +279,6 @@ const deleteUser = (
         } else {
           const userData = response.body.data.deleteUser;
           expect(userData.user.username).toBe('DELETED');
-          expect(userData.user.email).toBe('DELETED');
           resolve(userData);
         }
       });
