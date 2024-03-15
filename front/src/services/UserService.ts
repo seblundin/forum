@@ -70,7 +70,7 @@ const registerUser = async (vars: {
     }
 
     const data: UserResponse = await response.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
     console.error(error)
@@ -114,7 +114,7 @@ const updateUser = async (
     }
 
     const data: UserResponse = await response.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
     console.error(error)
@@ -148,7 +148,7 @@ const deleteUser = async (token: string) => {
     }
 
     const data: UserResponse = await response.json()
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
     console.error(error)
