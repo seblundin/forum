@@ -33,7 +33,7 @@ const createThread = async (
     })
 
     const data = await response.json()
-    console.log(data)
+    // console.log(data)
     return data.data.addThread
   } catch (error) {
     console.error(error)
@@ -66,7 +66,7 @@ const getThreads = async (token: string) => {
     })
 
     const body: ThreadResponse = await response.json()
-    console.log(body)
+    // console.log(body)
     return body.data.threads
   } catch (error) {
     console.error(error)
@@ -102,7 +102,7 @@ const getComments = async (token: string, threadId: string) => {
     })
 
     const body: CommentResponse = await response.json()
-    console.log(body)
+    // console.log(body)
     return body.data.commentsByThread
   } catch (error) {
     console.error(error)
